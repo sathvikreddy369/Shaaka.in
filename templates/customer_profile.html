@@ -86,6 +86,112 @@
         color: #333;
         font-size: 1.1rem;
     }
+    
+    /* Tabs */
+    .nav-tabs {
+        border-bottom: 2px solid #e0e0e0;
+        background: white;
+        padding: 10px 20px 0;
+        border-radius: 15px 15px 0 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 0;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #666;
+        border: none;
+        padding: 15px 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border-radius: 10px 10px 0 0;
+        background: transparent;
+        margin-right: 5px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        color: #28a745;
+        background: rgba(40, 167, 69, 0.05);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: white !important;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+        border: none;
+        z-index: 2;
+    }
+    
+    .tab-content {
+        background: white;
+        padding: 30px;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-top: -2px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .tab-pane {
+        display: none;
+    }
+    
+    .tab-pane.active {
+        display: block;
+    }
+    
+    /* Review Cards */
+    .review-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+    
+    .review-card:hover {
+        border-color: #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .review-product {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .review-product-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    
+    .review-product-info h6 {
+        margin: 0;
+        color: #2d5016;
+        font-weight: 700;
+    }
+    
+    .review-stars {
+        color: #ffc107;
+        font-size: 1.2rem;
+    }
+    
+    .review-text {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    
+    .review-date {
+        color: #999;
+        font-size: 0.9rem;
+    }
+    .my-reviews {
+        color:gold
+    }
 </style>
 {% endblock %}
 
@@ -111,10 +217,28 @@
         </div>
     </div>
     
-    <div class="row">
-        <!-- Personal Information -->
-        <div class="col-md-6">
-            <div class="section-card">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button">
+                <i class="bi bi-person-circle"></i> Profile Info
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link my-reviews" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button">
+                <i class="bi bi-star-fill my-reviews"></i> My Reviews
+            </button>
+        </li>
+    </ul>
+    
+    <!-- Tab Content -->
+    <div class="tab-content" id="profileTabContent">
+        <!-- Profile Info Tab -->
+        <div class="tab-pane fade show active" id="info" role="tabpanel">
+            <div class="row">
+                <!-- Personal Information -->
+                <div class="col-md-6">
+                    <div class="section-card">
                 <h4 class="mb-4">
                     <i class="bi bi-person-circle"></i> Personal Information
                 </h4>
@@ -216,6 +340,25 @@
             </div>
         </div>
     </div>
+        </div>
+        
+        <!-- My Reviews Tab -->
+        <div class="tab-pane fade" id="reviews" role="tabpanel">
+            <div class="section-card">
+                <h4 class="mb-4">
+                    <i class="bi bi-star-fill text-warning"></i> My Product Reviews
+                </h4>
+                <div id="myReviewsList">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Loading your reviews...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Add Address Modal -->
@@ -305,16 +448,23 @@
                 <h5 class="modal-title">Edit Profile</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="POST" action="{{ url_for('customer_profile') }}">
+            <form method="POST" action="{{ url_for('update_customer_profile') }}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Full Name</label>
                         <input type="text" class="form-control" name="name" value="{{ customer.name }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Alternate Phone</label>
-                        <input type="tel" class="form-control" name="alternate_phone" 
-                               value="{{ customer.alternate_phone or '' }}" pattern="[0-9]{10}">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" name="email" value="{{ customer.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Primary Phone</label>
+                        <input type="tel" class="form-control" name="phone" value="{{ customer.phone }}" required pattern="[0-9]{10}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" name="location" value="{{ customer.location }}" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -341,6 +491,103 @@ function getCurrentLocation() {
     } else {
         alert('Geolocation is not supported by this browser.');
     }
+}
+
+// Load user reviews when tab is clicked
+document.getElementById('reviews-tab').addEventListener('click', function() {
+    loadMyReviews();
+});
+
+function loadMyReviews() {
+    const container = document.getElementById('myReviewsList');
+    container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-success"></div><p class="mt-3 text-muted">Loading your reviews...</p></div>';
+    
+    fetch('/api/my_reviews')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.reviews && data.reviews.length > 0) {
+                let html = '';
+                data.reviews.forEach(review => {
+                    let stars = '';
+                    for (let i = 1; i <= 5; i++) {
+                        stars += i <= review.rating ? '<i class="bi bi-star-fill"></i> ' : '<i class="bi bi-star"></i> ';
+                    }
+                    
+                    html += `
+                        <div class="review-card">
+                            <div class="review-product">
+                                <img src="/static/uploads/${review.crop_image}" 
+                                     class="review-product-img" 
+                                     alt="${review.crop_name}"
+                                     onerror="this.src='https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=200'">
+                                <div class="review-product-info flex-grow-1">
+                                    <h6>${review.crop_name}</h6>
+                                    <div class="review-stars">${stars}</div>
+                                    <span class="review-date">
+                                        <i class="bi bi-calendar"></i> ${new Date(review.created_at).toLocaleDateString()}
+                                    </span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReviewFromProfile(${review.id}, ${review.crop_id})">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteReviewFromProfile(${review.id})">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                            ${review.review_text ? `
+                                <div class="review-text">
+                                    <strong>Your Review:</strong><br>
+                                    ${review.review_text}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-star" style="font-size: 4rem; color: #ddd;"></i>
+                        <h5 class="mt-3">No Reviews Yet</h5>
+                        <p class="text-muted">You haven't reviewed any products yet.</p>
+                        <a href="{{ url_for('customer_dashboard') }}" class="btn btn-success mt-3">
+                            <i class="bi bi-shop"></i> Shop Now
+                        </a>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            container.innerHTML = '<div class="alert alert-danger">Error loading reviews. Please try again.</div>';
+        });
+}
+
+function editReviewFromProfile(reviewId, cropId) {
+    window.location.href = `/customer_dashboard?edit_review=${reviewId}&crop_id=${cropId}`;
+}
+
+function deleteReviewFromProfile(reviewId) {
+    if (!confirm('Are you sure you want to delete this review?')) {
+        return;
+    }
+    
+    fetch(`/delete_review/${reviewId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Review deleted successfully!');
+            loadMyReviews();
+        } else {
+            alert(data.message || 'Error deleting review');
+        }
+    })
+    .catch(error => {
+        alert('Error deleting review');
+    });
 }
 </script>
 {% endblock %}

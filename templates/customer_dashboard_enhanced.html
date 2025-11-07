@@ -503,19 +503,222 @@
         opacity: 1;
     }
     
+    /* Sticky Filter Bar on Scroll (Mobile) */
+    .filter-section.sticky {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        padding: 10px 15px;
+        margin-bottom: 0;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        animation: slideDown 0.3s ease-out;
+        background: white;
+    }
+    
+    /* Compact Filter Bar for Mobile */
+    .filter-compact {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background: white;
+        padding: 8px 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .filter-compact.show {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    .filter-compact.expanded {
+        padding: 15px;
+    }
+    
+    .filter-compact-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .filter-compact-content.collapsed {
+        justify-content: space-between;
+    }
+    
+    .filter-compact-content.expanded {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-toggle-btn {
+        background: var(--secondary-green);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        transition: all 0.3s;
+    }
+    
+    .filter-toggle-btn:hover {
+        background: var(--primary-green);
+    }
+    
+    .filter-search-compact {
+        flex: 1;
+        border: 2px solid var(--light-green);
+        border-radius: 20px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .filter-expanded-content {
+        display: none;
+        width: 100%;
+    }
+    
+    .filter-expanded-content.show {
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    .filter-expanded-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .filter-expanded-row .form-select,
+    .filter-expanded-row .form-control {
+        flex: 1;
+        border: 2px solid var(--light-green);
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .filter-apply-btn {
+        background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .crop-card {
+            border-radius: 15px;
+        }
+        
+        .crop-image-container {
+            height: 150px;
+        }
+        
+        .crop-card-body {
+            padding: 12px;
+        }
+        
+        .crop-title {
+            font-size: 1rem;
+        }
+        
+        .price-current {
+            font-size: 1.3rem;
+        }
+        
+        .badge-organic,
+        .badge-discount {
+            padding: 5px 10px;
+            font-size: 0.7rem;
         }
         
         .hero-banner {
-            padding: 40px 20px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-banner h1 {
+            font-size: 1.8rem;
         }
         
         .filter-section {
-            padding: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-dialog {
+            margin: 10px;
+        }
+        
+        .modal-body {
+            padding: 20px !important;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-body .row {
+            flex-direction: column;
+        }
+        
+        .modal-body .col-md-6 {
+            width: 100%;
+        }
+        
+        #modalProductImage {
+            height: 250px;
+            margin-bottom: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .product-grid {
+            gap: 10px;
+        }
+        
+        .crop-image-container {
+            height: 130px;
+        }
+        
+        .crop-card-body {
+            padding: 10px;
+        }
+        
+        .crop-title {
+            font-size: 0.9rem;
+        }
+        
+        .farmer-info {
+            font-size: 0.8rem;
+        }
+        
+        .price-current {
+            font-size: 1.1rem;
+        }
+        
+        .btn-add-cart {
+            padding: 10px 15px;
+            font-size: 0.9rem;
         }
     }
 </style>
@@ -544,14 +747,14 @@
         </div>
     </div>
     
-    <!-- Filter Section -->
-    <div class="filter-section">
-        <div class="row align-items-center">
+    <!-- Filter Section (Desktop & Mobile - Always at top) -->
+    <div class="filter-section" id="mainFilterSection">
+        <div class="row align-items-center d-none d-md-flex">
             <div class="col-md-3 mb-3 mb-md-0">
                 <label class="form-label fw-bold">
                     <i class="bi bi-funnel"></i> Filter by Type
                 </label>
-                <select class="form-select" onchange="window.location.href='?type=' + this.value">
+                <select class="form-select" id="typeSelectDesktop" onchange="window.location.href='?type=' + this.value">
                     <option value="All" {% if crop_type == 'All' %}selected{% endif %}>All Products</option>
                     <option value="Vegetable" {% if crop_type == 'Vegetable' %}selected{% endif %}>🥬 Vegetables</option>
                     <option value="Fruit" {% if crop_type == 'Fruit' %}selected{% endif %}>🍎 Fruits</option>
@@ -581,6 +784,64 @@
                     <i class="bi bi-cart3"></i> View Cart
                 </a>
             </div>
+        </div>
+        
+        <!-- Mobile Filter (Normal at top) -->
+        <div class="d-md-none">
+            <div class="row g-2">
+                <div class="col-12">
+                    <input type="text" class="form-control" id="searchInputMobileTop" placeholder="🔍 Search products...">
+                </div>
+                <div class="col-6">
+                    <select class="form-select" id="typeSelectMobileTop" onchange="window.location.href='?type=' + this.value">
+                        <option value="All" {% if crop_type == 'All' %}selected{% endif %}>All Products</option>
+                        <option value="Vegetable" {% if crop_type == 'Vegetable' %}selected{% endif %}>🥬 Vegetables</option>
+                        <option value="Fruit" {% if crop_type == 'Fruit' %}selected{% endif %}>🍎 Fruits</option>
+                        <option value="Food Grains" {% if crop_type == 'Food Grains' %}selected{% endif %}>🌾 Food Grains</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <select class="form-select" id="sortSelectMobileTop">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Compact Filter Bar (Mobile) -->
+    <div class="filter-compact d-md-none" id="filterCompact">
+        <div class="filter-compact-content collapsed" id="filterCompactContent">
+            <input type="text" class="filter-search-compact" id="searchInputMobile" placeholder="🔍 Search products...">
+            <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterExpand()">
+                <i class="bi bi-funnel"></i>
+                <span>Filter</span>
+            </button>
+        </div>
+        
+        <div class="filter-expanded-content" id="filterExpandedContent">
+            <div class="filter-expanded-row">
+                <select class="form-select" id="typeSelectMobile" onchange="applyMobileFilters()">
+                    <option value="All" {% if crop_type == 'All' %}selected{% endif %}>All Products</option>
+                    <option value="Vegetable" {% if crop_type == 'Vegetable' %}selected{% endif %}>🥬 Vegetables</option>
+                    <option value="Fruit" {% if crop_type == 'Fruit' %}selected{% endif %}>🍎 Fruits</option>
+                    <option value="Food Grains" {% if crop_type == 'Food Grains' %}selected{% endif %}>🌾 Food Grains</option>
+                </select>
+            </div>
+            <div class="filter-expanded-row">
+                <select class="form-select" id="sortSelectMobile">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+            <button class="filter-apply-btn" onclick="applyMobileFilters()">
+                <i class="bi bi-check-circle"></i> Apply Filters
+            </button>
         </div>
     </div>
     
@@ -855,15 +1116,146 @@ document.getElementById('sortSelect').addEventListener('change', function(e) {
     cards.forEach(card => grid.appendChild(card));
 });
 
-// Scroll to top
+// Mobile Filter Toggle
+function toggleFilterExpand() {
+    const content = document.getElementById('filterCompactContent');
+    const expanded = document.getElementById('filterExpandedContent');
+    const compact = document.getElementById('filterCompact');
+    const btn = document.getElementById('filterToggleBtn');
+    
+    if (expanded.classList.contains('show')) {
+        // Collapse
+        expanded.classList.remove('show');
+        content.classList.remove('expanded');
+        content.classList.add('collapsed');
+        compact.classList.remove('expanded');
+        btn.innerHTML = '<i class="bi bi-funnel"></i><span>Filter</span>';
+    } else {
+        // Expand
+        expanded.classList.add('show');
+        content.classList.remove('collapsed');
+        content.classList.add('expanded');
+        compact.classList.add('expanded');
+        btn.innerHTML = '<i class="bi bi-x"></i><span>Close</span>';
+    }
+}
+
+// Apply Mobile Filters
+function applyMobileFilters() {
+    const type = document.getElementById('typeSelectMobile').value;
+    const sort = document.getElementById('sortSelectMobile').value;
+    
+    // Apply type filter
+    if (type !== 'All') {
+        window.location.href = '?type=' + type;
+    }
+    
+    // Apply sort
+    const grid = document.getElementById('productGrid');
+    const cards = Array.from(document.querySelectorAll('.crop-card'));
+    
+    cards.sort((a, b) => {
+        switch(sort) {
+            case 'price-low':
+                return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+            case 'price-high':
+                return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+            case 'rating':
+                return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            default:
+                return 0;
+        }
+    });
+    
+    cards.forEach(card => grid.appendChild(card));
+    
+    // Close filter
+    toggleFilterExpand();
+}
+
+// Mobile Search (Top)
+document.getElementById('searchInputMobileTop')?.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.crop-card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.crop-title').textContent.toLowerCase();
+        const type = card.querySelector('.crop-type').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || type.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Mobile Search (Compact)
+document.getElementById('searchInputMobile')?.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.crop-card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.crop-title').textContent.toLowerCase();
+        const type = card.querySelector('.crop-type').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || type.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Sort functionality for mobile top
+document.getElementById('sortSelectMobileTop')?.addEventListener('change', function(e) {
+    const sortBy = e.target.value;
+    const grid = document.getElementById('productGrid');
+    const cards = Array.from(document.querySelectorAll('.crop-card'));
+    
+    cards.sort((a, b) => {
+        switch(sortBy) {
+            case 'price-low':
+                return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+            case 'price-high':
+                return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+            case 'rating':
+                return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            default:
+                return 0;
+        }
+    });
+    
+    cards.forEach(card => grid.appendChild(card));
+});
+
+// Scroll to top and sticky filter
 const scrollTop = document.getElementById('scrollTop');
+const filterCompact = document.getElementById('filterCompact');
+let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
+    const currentScroll = window.pageYOffset;
+    
+    // Scroll to top button
+    if (currentScroll > 300) {
         scrollTop.classList.add('visible');
     } else {
         scrollTop.classList.remove('visible');
     }
+    
+    // Show compact filter on mobile when scrolling down
+    if (window.innerWidth <= 768 && filterCompact) {
+        if (currentScroll > 400 && currentScroll > lastScroll) {
+            // Scrolling down
+            filterCompact.classList.add('show');
+        } else if (currentScroll < 200) {
+            // Near top
+            filterCompact.classList.remove('show');
+        }
+    }
+    
+    lastScroll = currentScroll;
 });
 
 scrollTop.addEventListener('click', () => {
@@ -953,14 +1345,28 @@ function loadReviews(cropId) {
                     for (let i = 1; i <= 5; i++) {
                         stars += i <= review.rating ? '<i class="bi bi-star-fill text-warning"></i> ' : '<i class="bi bi-star text-warning"></i> ';
                     }
+                    
+                    const isOwnReview = review.is_own_review || false;
+                    
                     html += `
-                        <div class="review-item">
+                        <div class="review-item" id="review-${review.id}">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
                                     <strong>${review.customer_name}</strong>
+                                    ${isOwnReview ? '<span class="badge bg-success ms-2">Your Review</span>' : ''}
                                     <div class="review-stars">${stars}</div>
                                 </div>
-                                <small class="text-muted">${new Date(review.created_at).toLocaleDateString()}</small>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <small class="text-muted">${new Date(review.created_at).toLocaleDateString()}</small>
+                                    ${isOwnReview ? `
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editReview(${review.id}, ${review.rating}, '${(review.review_text || '').replace(/'/g, "\\'")}')">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReview(${review.id}, ${cropId})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
                             </div>
                             <p class="mb-0">${review.review_text || 'No comment provided'}</p>
                         </div>
@@ -974,6 +1380,56 @@ function loadReviews(cropId) {
         .catch(error => {
             reviewsList.innerHTML = '<p class="text-danger">Error loading reviews</p>';
         });
+}
+
+// Edit Review
+function editReview(reviewId, rating, reviewText) {
+    // Show the add review form
+    showAddReviewForm();
+    
+    // Populate with existing data
+    document.getElementById('ratingValue').value = rating;
+    document.getElementById('reviewForm').querySelector('[name="review_text"]').value = reviewText;
+    
+    // Update stars
+    document.querySelectorAll('.star-rating-input i').forEach(star => {
+        if (star.dataset.rating <= rating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+    
+    // Change form to update mode
+    const form = document.getElementById('reviewForm');
+    form.dataset.reviewId = reviewId;
+    form.dataset.mode = 'edit';
+    
+    // Change button text
+    form.querySelector('button[type="submit"]').innerHTML = '<i class="bi bi-check-circle"></i> Update Review';
+}
+
+// Delete Review
+function deleteReview(reviewId, cropId) {
+    if (!confirm('Are you sure you want to delete this review?')) {
+        return;
+    }
+    
+    fetch(`/delete_review/${reviewId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Review deleted successfully!');
+            loadReviews(cropId);
+        } else {
+            alert(data.message || 'Error deleting review');
+        }
+    })
+    .catch(error => {
+        alert('Error deleting review');
+    });
 }
 
 // Show/Hide Add Review Form
@@ -1035,6 +1491,8 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
     const cropId = document.getElementById('reviewCropId').value;
     const rating = document.getElementById('ratingValue').value;
     const reviewText = this.querySelector('[name="review_text"]').value;
+    const mode = this.dataset.mode || 'add';
+    const reviewId = this.dataset.reviewId;
     
     if (!rating) {
         alert('Please select a rating');
@@ -1045,16 +1503,23 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
     formData.append('rating', rating);
     formData.append('review_text', reviewText);
     
-    fetch(`/add_review/${cropId}`, {
+    const url = mode === 'edit' ? `/update_review/${reviewId}` : `/add_review/${cropId}`;
+    
+    fetch(url, {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Review submitted successfully!');
+            alert(mode === 'edit' ? 'Review updated successfully!' : 'Review submitted successfully!');
             hideAddReviewForm();
             loadReviews(cropId);
+            
+            // Reset form mode
+            this.dataset.mode = 'add';
+            delete this.dataset.reviewId;
+            this.querySelector('button[type="submit"]').innerHTML = '<i class="bi bi-star-fill"></i> Submit Review';
         } else {
             alert(data.message || 'Error submitting review');
         }

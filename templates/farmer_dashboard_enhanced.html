@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Dashboard - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    
+    /* Dashboard Header */
+    .dashboard-header {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    }
+    
+    /* Stat Cards */
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        border: 2px solid #f0f0f0;
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        border-color: #28a745;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .stat-icon.success { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+    .stat-icon.primary { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+    .stat-icon.warning { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+    .stat-icon.info { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2d5016;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .stat-change {
+        font-size: 0.85rem;
+        margin-top: 8px;
+    }
+    
+    .stat-change.positive { color: #28a745; }
+    .stat-change.negative { color: #dc3545; }
+    
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+        border: 2px solid #f0f0f0;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2d5016;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e8f5e9;
+    }
+    
+    /* Crop Table */
+    .crop-table {
+        overflow-x: auto;
+    }
+    
+    .crop-img-small {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    
+    .badge-stock {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .badge-low { background: #dc3545; color: white; }
+    .badge-medium { background: #ffc107; color: #000; }
+    .badge-high { background: #28a745; color: white; }
+    
+    /* Charts */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-top: 20px;
+    }
+    
+    /* Quick Actions */
+    .quick-action {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        border: 2px solid #f0f0f0;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+    
+    .quick-action:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        border-color: #28a745;
+        color: inherit;
+    }
+    
+    .quick-action-icon {
+        font-size: 2.5rem;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stat-number {
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+        
+        .dashboard-header {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="mb-2">
+                    <i class="bi bi-person-badge"></i> Welcome, {{ current_user.name }}!
+                </h2>
+                <p class="mb-0 opacity-90">
+                    <i class="bi bi-geo-alt"></i> {{ current_user.location }} | 
+                    <i class="bi bi-telephone"></i> {{ current_user.phone }}
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{{ url_for('add_crop') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-plus-circle"></i> Add New Crop
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-basket"></i>
+                </div>
+                <div class="stat-number">{{ crops|length }}</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-number">
+                    {% set total_stock = crops|sum(attribute='quantity') %}
+                    {{ total_stock }}
+                </div>
+                <div class="stat-label">Total Stock (kg)</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-currency-rupee"></i>
+                </div>
+                <div class="stat-number">
+                    {% set total_value = 0 %}
+                    {% for crop in crops %}
+                        {% set total_value = total_value + (crop.quantity * crop.price_per_kg) %}
+                    {% endfor %}
+                    ₹{{ "{:,.0f}".format(total_value) }}
+                </div>
+                <div class="stat-label">Stock Value</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-icon info">
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <div class="stat-number">
+                    {% set avg_rating = (crops|sum(attribute='average_rating') / crops|length) if crops|length > 0 else 0 %}
+                    {{ "%.1f"|format(avg_rating) }}
+                </div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <a href="{{ url_for('add_crop') }}" class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </div>
+                <div class="fw-bold">Add Product</div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="{{ url_for('farmer_analytics') }}" class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="fw-bold">View Analytics</div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="#" class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="bi bi-bag-check"></i>
+                </div>
+                <div class="fw-bold">Orders</div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="#" class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <div class="fw-bold">Reviews</div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Products Table -->
+    <div class="section-card">
+        <h3 class="section-title">
+            <i class="bi bi-basket"></i> Your Products
+        </h3>
+        
+        {% if crops %}
+        <div class="crop-table">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Type</th>
+                            <th>Stock</th>
+                            <th>Price/kg</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for crop in crops %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ url_for('static', filename='uploads/' + crop.image) }}" 
+                                         class="crop-img-small" alt="{{ crop.crop_name }}"
+                                         onerror="this.src='https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=100'">
+                                    <div>
+                                        <strong>{{ crop.crop_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ crop.place_of_origin or 'Local' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ crop.crop_type }}</span>
+                            </td>
+                            <td>
+                                <span class="badge-stock 
+                                    {% if crop.quantity < 20 %}badge-low
+                                    {% elif crop.quantity < 50 %}badge-medium
+                                    {% else %}badge-high{% endif %}">
+                                    {{ crop.quantity }} kg
+                                </span>
+                            </td>
+                            <td>
+                                <strong>₹{{ crop.price_per_kg }}</strong>
+                                {% if crop.mrp and crop.mrp > crop.price_per_kg %}
+                                <br><small class="text-muted"><del>₹{{ crop.mrp }}</del></small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="text-warning">
+                                    {% set rating = crop.average_rating or 0 %}
+                                    {% for i in range(5) %}
+                                        {% if i < rating|int %}
+                                            <i class="bi bi-star-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <br>
+                                    <small class="text-muted">({{ crop.review_count or 0 }} reviews)</small>
+                                </div>
+                            </td>
+                            <td>
+                                {% if crop.quantity > 0 %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('edit_crop', crop_id=crop.id) }}" 
+                                       class="btn btn-outline-primary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{{ url_for('delete_crop', crop_id=crop.id) }}" 
+                                       class="btn btn-outline-danger" 
+                                       onclick="return confirm('Delete this crop?')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-basket" style="font-size: 4rem; color: #ddd;"></i>
+            <h5 class="mt-3">No Products Yet</h5>
+            <p class="text-muted">Start by adding your first product</p>
+            <a href="{{ url_for('add_crop') }}" class="btn btn-success mt-3">
+                <i class="bi bi-plus-circle"></i> Add Your First Product
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

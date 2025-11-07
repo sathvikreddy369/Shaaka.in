@@ -6,9 +6,14 @@
 <style>
     /* Organic Theme Background */
     body {
-        background: linear-gradient(135deg, #faf8f3 0%, #e8f5e9 50%, #fff8e1 100%);
+        background: #faf8f3;
         position: relative;
         overflow-x: hidden;
+    }
+    
+    /* Smooth Scroll */
+    html {
+        scroll-behavior: smooth;
     }
     
     /* Animated Background Pattern */
@@ -20,9 +25,9 @@
         width: 100%;
         height: 100%;
         background-image: 
-            radial-gradient(circle at 20% 50%, rgba(139, 195, 74, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 20%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+            radial-gradient(circle at 20% 50%, rgba(139, 195, 74, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 193, 7, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(76, 175, 80, 0.15) 0%, transparent 50%);
         animation: backgroundShift 20s ease-in-out infinite;
         z-index: -1;
     }
@@ -30,6 +35,134 @@
     @keyframes backgroundShift {
         0%, 100% { transform: translate(0, 0) scale(1); }
         50% { transform: translate(50px, 30px) scale(1.1); }
+    }
+    
+    /* Parallax Effect */
+    .parallax-section {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .parallax-bg {
+        position: absolute;
+        top: -50px;
+        left: 0;
+        width: 100%;
+        height: calc(100% + 100px);
+        background-size: cover;
+        background-position: center;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+    
+    /* Trust Badges */
+    .trust-badge {
+        background: white;
+        padding: 25px 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #f0f0f0;
+    }
+    
+    .trust-badge h4 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .trust-badge p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    
+    .trust-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+        transition: left 0.6s;
+    }
+    
+    .trust-badge:hover::before {
+        left: 100%;
+    }
+    
+    .trust-badge:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(76, 175, 80, 0.15);
+        border-color: #8bc34a;
+    }
+    
+    /* Shimmer Effect */
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
+    .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        background-size: 1000px 100%;
+        animation: shimmer 3s infinite;
+    }
+    
+    /* Section Dividers */
+    section {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #8bc34a, transparent);
+        border-radius: 2px;
+    }
+    
+    /* Organic Patterns */
+    .organic-pattern {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .organic-pattern::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(139, 195, 74, 0.03) 1px, transparent 1px);
+        background-size: 30px 30px;
+        animation: patternMove 60s linear infinite;
+    }
+    
+    @keyframes patternMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(30px, 30px); }
+    }
+    
+    /* Smooth Fade In */
+    .fade-in-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    
+    .fade-in-section.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
     
     /* Floating Leaves Animation */
@@ -81,14 +214,15 @@
     /* Hero Carousel Styles */
     .hero-carousel {
         position: relative;
-        height: 600px;
+        height: 500px;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-        border-radius: 0 0 50px 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 60px;
     }
     
     .carousel-item {
-        height: 600px;
+        height: 500px;
         background-size: cover;
         background-position: center;
         position: relative;
@@ -114,17 +248,17 @@
     }
     
     .carousel-content h1 {
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: 800;
-        margin-bottom: 20px;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         animation: slideInDown 0.8s ease-out;
     }
     
     .carousel-content p {
-        font-size: 1.5rem;
-        margin-bottom: 30px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         animation: fadeIn 1.2s ease-out;
     }
     
@@ -200,16 +334,16 @@
     
     /* Feature Cards with Enhanced Hover */
     .feature-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
-        border-radius: 25px;
-        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        padding: 30px 25px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         height: 100%;
         position: relative;
         overflow: hidden;
-        border: 2px solid transparent;
+        border: 2px solid #f0f0f0;
     }
     
     .feature-card::before {
@@ -244,33 +378,48 @@
     }
     
     .feature-card:hover {
-        transform: translateY(-20px) scale(1.03);
-        box-shadow: 0 20px 50px rgba(76, 175, 80, 0.3);
-        border-color: rgba(139, 195, 74, 0.3);
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(76, 175, 80, 0.2);
+        border-color: #8bc34a;
     }
     
     .feature-icon {
-        font-size: 3.5rem;
+        font-size: 3rem;
         color: #28a745;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         transition: all 0.3s;
         animation: float 3s ease-in-out infinite;
     }
     
     .feature-card:hover .feature-icon {
-        transform: scale(1.2) rotate(5deg);
+        transform: scale(1.15) rotate(5deg);
         color: #218838;
     }
     
     .feature-card h4 {
-        color: #2c3e50;
-        margin-bottom: 15px;
+        color: #2d5016;
+        margin-bottom: 12px;
         font-weight: 700;
+        font-size: 1.2rem;
         transition: color 0.3s;
     }
     
     .feature-card:hover h4 {
         color: #28a745;
+    }
+    
+    .feature-card p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    /* Product Grid */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
     }
     
     /* Product Showcase Carousel */
@@ -287,7 +436,7 @@
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         transition: all 0.4s;
-        margin: 15px;
+        animation: fadeInUp 0.6s ease-out backwards;
     }
     
     .product-card:hover {
@@ -303,6 +452,17 @@
         overflow: hidden;
     }
     
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+    
+    .product-card:hover .product-image img {
+        transform: scale(1.1);
+    }
+    
     .product-badge {
         position: absolute;
         top: 15px;
@@ -314,10 +474,41 @@
         font-weight: 600;
         font-size: 0.85rem;
         animation: pulse 2s infinite;
+        z-index: 1;
+    }
+    
+    .product-badge.discount {
+        background: #ff6b35;
+        left: 15px;
+        right: auto;
     }
     
     .product-info {
         padding: 25px;
+    }
+    
+    .product-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2d5016;
+        margin-bottom: 10px;
+    }
+    
+    .product-type {
+        display: inline-block;
+        background: #e8f5e9;
+        color: #2d5016;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .product-farmer {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
     }
     
     .product-price {
@@ -331,6 +522,84 @@
         color: #999;
         font-size: 1.2rem;
         margin-left: 10px;
+    }
+    
+    .product-rating {
+        color: #ffc107;
+        margin-bottom: 15px;
+    }
+    
+    .product-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 15px;
+    }
+    
+    .qty-selector {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e8f5e9;
+        border-radius: 25px;
+        overflow: hidden;
+    }
+    
+    .qty-selector button {
+        background: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .qty-selector button:hover {
+        background: #e8f5e9;
+    }
+    
+    .qty-selector input {
+        border: none;
+        width: 50px;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .btn-add-to-cart {
+        flex: 1;
+        background: linear-gradient(135deg, #4a7c2c, #2d5016);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-add-to-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .product-image {
+            height: 180px;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 1rem;
+        }
+        
+        .product-price {
+            font-size: 1.3rem;
+        }
     }
     
     /* Stats Section with Counter Animation */
@@ -381,13 +650,19 @@
     /* Testimonial Cards */
     .testimonial-card {
         background: white;
-        border-radius: 20px;
-        padding: 35px;
+        border-radius: 15px;
+        padding: 25px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         transition: all 0.4s;
         height: 100%;
         position: relative;
+        border: 2px solid #f0f0f0;
+    }
+    
+    .testimonial-card p {
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
     
     .testimonial-card::before {
@@ -401,8 +676,9 @@
     }
     
     .testimonial-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(40, 167, 69, 0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(40, 167, 69, 0.12);
+        border-color: #8bc34a;
     }
     
     .testimonial-stars {
@@ -429,12 +705,13 @@
     /* Role Cards */
     .role-card {
         background: white;
-        border-radius: 20px;
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         transition: all 0.4s;
         height: 100%;
         position: relative;
+        border: 2px solid #f0f0f0;
     }
     
     .role-card::after {
@@ -454,25 +731,37 @@
     }
     
     .role-card:hover {
-        transform: translateY(-15px) scale(1.03);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-color: #8bc34a;
     }
     
     .role-image {
-        height: 250px;
+        height: 200px;
         object-fit: cover;
         width: 100%;
         transition: transform 0.4s;
     }
     
     .role-card:hover .role-image {
-        transform: scale(1.1);
+        transform: scale(1.08);
     }
     
     .role-body {
-        padding: 30px;
+        padding: 25px;
         position: relative;
         z-index: 1;
+    }
+    
+    .role-body h4 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .role-body p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
     }
     
     .role-body .btn {
@@ -486,26 +775,35 @@
     
     /* How It Works Section */
     .how-it-works-icon {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         background: linear-gradient(135deg, #28a745, #218838);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
-        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+        margin: 0 auto 15px;
+        box-shadow: 0 5px 20px rgba(40, 167, 69, 0.25);
         transition: all 0.4s;
     }
     
     .how-it-works-icon:hover {
         transform: rotate(360deg) scale(1.1);
-        box-shadow: 0 15px 40px rgba(40, 167, 69, 0.4);
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.35);
     }
     
     .how-it-works-icon i {
-        font-size: 3rem;
+        font-size: 2.5rem;
         color: white;
+    }
+    
+    .how-it-works-step h5 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    
+    .how-it-works-step p {
+        font-size: 0.9rem;
     }
     
     /* Scroll Animations */
@@ -552,23 +850,99 @@
     /* Responsive */
     @media (max-width: 768px) {
         .hero-carousel {
-            height: 500px;
+            height: 400px;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
         }
         
         .carousel-item {
-            height: 500px;
+            height: 400px;
         }
         
         .carousel-content h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
         
         .carousel-content p {
-            font-size: 1.1rem;
+            font-size: 1rem;
+        }
+        
+        .carousel-badge {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            margin: 3px;
+        }
+        
+        .btn-custom {
+            padding: 12px 25px;
+            font-size: 1rem;
         }
         
         .stat-number {
+            font-size: 2rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+        }
+        
+        .feature-card {
+            padding: 25px 20px;
+        }
+        
+        .feature-icon {
             font-size: 2.5rem;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+        }
+        
+        section {
+            padding: 30px 0 !important;
+        }
+        
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        h2 {
+            font-size: 1.8rem !important;
+        }
+        
+        .product-grid {
+            gap: 15px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .hero-carousel {
+            height: 350px;
+        }
+        
+        .carousel-item {
+            height: 350px;
+        }
+        
+        .carousel-content h1 {
+            font-size: 1.6rem;
+        }
+        
+        .carousel-content p {
+            font-size: 0.9rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem !important;
+        }
+        
+        .feature-card {
+            padding: 20px 15px;
         }
     }
 </style>
@@ -718,9 +1092,12 @@
 </div>
 
 <!-- Features Section -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
-        <h2 class="text-center mb-5">Why Choose Shaaka?</h2>
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">Why Choose Shaaka?</h2>
+            <p class="text-muted">Fresh, Organic, and Delivered with Care</p>
+        </div>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="feature-card">
@@ -769,184 +1146,88 @@
 </section>
 
 <!-- Trust Section -->
-<section class="py-5 bg-light">
+<section class="py-4" style="background: linear-gradient(135deg, #f8fdf9 0%, #e8f5e9 100%);">
     <div class="container">
-        <h2 class="text-center mb-5">🌱 Trusted by Thousands</h2>
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">🌱 Trusted by Thousands</h2>
+            <p class="text-muted">Quality You Can Trust, Every Single Time</p>
+        </div>
         <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="feature-card">
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="trust-badge">
                     <i class="bi bi-patch-check-fill feature-icon text-success"></i>
                     <h4>Certified Organic</h4>
                     <p>All our farmers follow organic farming practices certified by agricultural authorities.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-success">100% Verified</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-card">
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="trust-badge">
                     <i class="bi bi-droplet-fill feature-icon text-primary"></i>
                     <h4>Pesticide Free</h4>
                     <p>Zero harmful chemicals. Our produce is tested and guaranteed to be pesticide-free.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-primary">Lab Tested</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-card">
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="trust-badge">
                     <i class="bi bi-geo-alt-fill feature-icon text-warning"></i>
                     <h4>Local Sourcing</h4>
                     <p>All produce sourced within 50km radius, ensuring freshness and supporting local economy.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-warning text-dark">50km Radius</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-card">
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="trust-badge">
                     <i class="bi bi-clock-fill feature-icon text-info"></i>
                     <h4>Farm to Table</h4>
                     <p>From harvest to your table in less than 24 hours. Maximum nutrition and freshness.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-info text-dark">24 Hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Trust Indicators -->
+        <div class="row mt-5 g-4">
+            <div class="col-md-4 text-center scroll-animate">
+                <div class="trust-badge">
+                    <i class="bi bi-shield-check feature-icon text-success"></i>
+                    <h4>Secure Payments</h4>
+                    <p>Your transactions are protected with bank-level encryption and security.</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center scroll-animate">
+                <div class="trust-badge">
+                    <i class="bi bi-arrow-repeat feature-icon text-primary"></i>
+                    <h4>Easy Returns</h4>
+                    <p>Not satisfied? Get instant refunds for damaged or incorrect items within 24 hours.</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center scroll-animate">
+                <div class="trust-badge">
+                    <i class="bi bi-headset feature-icon text-warning"></i>
+                    <h4>24/7 Support</h4>
+                    <p>Our customer support team is always ready to help you with any queries.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Featured Products Carousel -->
-<section class="product-showcase">
-    <div class="container">
-        <h2 class="text-center mb-5 scroll-animate">🛒 Featured Organic Products</h2>
-        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="product-card scroll-animate">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500');">
-                                    <span class="product-badge">20% OFF</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Tomatoes</h5>
-                                    <p class="text-muted mb-2">Fresh & Juicy</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹40</span>
-                                            <span class="product-old-price">₹50</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 5.0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-card scroll-animate">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500');">
-                                    <span class="product-badge">FRESH</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Spinach</h5>
-                                    <p class="text-muted mb-2">Nutrient Rich</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹30</span>
-                                            <span class="product-old-price">₹40</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 4.8</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-card scroll-animate">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500');">
-                                    <span class="product-badge">NEW</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Carrots</h5>
-                                    <p class="text-muted mb-2">Crunchy & Sweet</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹45</span>
-                                            <span class="product-old-price">₹55</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 4.9</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500');">
-                                    <span class="product-badge">ORGANIC</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Bananas</h5>
-                                    <p class="text-muted mb-2">Sweet & Fresh</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹35</span>
-                                            <span class="product-old-price">₹45</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 5.0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1553279768-865429fa0078?w=500');">
-                                    <span class="product-badge">PREMIUM</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Mangoes</h5>
-                                    <p class="text-muted mb-2">Alphonso Variety</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹80</span>
-                                            <span class="product-old-price">₹100</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 5.0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500');">
-                                    <span class="product-badge">BEST SELLER</span>
-                                </div>
-                                <div class="product-info">
-                                    <h5>Organic Potatoes</h5>
-                                    <p class="text-muted mb-2">Farm Fresh</p>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <span class="product-price">₹25</span>
-                                            <span class="product-old-price">₹30</span>
-                                        </div>
-                                        <span class="text-warning">⭐ 4.7</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
-        </div>
-        <div class="text-center mt-5">
-            <a href="{{ url_for('customer_register') }}" class="btn btn-success btn-custom btn-lg">
-                <i class="bi bi-shop"></i> View All Products
-            </a>
-        </div>
-    </div>
-</section>
-
 <!-- Testimonials Section -->
-<section class="py-5">
+<section class="py-4" style="background: #faf8f3;">
     <div class="container">
-        <h2 class="text-center mb-5 scroll-animate">⭐ What Our Customers Say</h2>
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">⭐ What Our Customers Say</h2>
+            <p class="text-muted">Real Stories from Real People</p>
+        </div>
         <div class="row g-4">
             <div class="col-md-4 scroll-animate">
                 <div class="testimonial-card">
@@ -992,8 +1273,12 @@
 </section>
 
 <!-- Stats Section -->
-<section class="stats-section">
+<section class="stats-section" style="padding: 60px 0;">
     <div class="container">
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: white; font-weight: 800;">Our Impact</h2>
+            <p style="color: rgba(255,255,255,0.9);">Growing Together, One Order at a Time</p>
+        </div>
         <div class="row">
             <div class="col-md-3 col-6">
                 <div class="stat-item">
@@ -1024,9 +1309,12 @@
 </section>
 
 <!-- Join Us Section -->
-<section class="py-5">
+<section class="py-4" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);">
     <div class="container">
-        <h2 class="text-center mb-5">Join Our Community</h2>
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">Join Our Community</h2>
+            <p class="text-muted">Be Part of the Organic Revolution</p>
+        </div>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="role-card">
@@ -1035,9 +1323,15 @@
                     <div class="role-body">
                         <h4>For Customers</h4>
                         <p>Get fresh produce and home-cooked meals delivered to your door</p>
-                        <a href="{{ url_for('customer_register') }}" class="btn btn-primary w-100">
-                            Register as Customer
-                        </a>
+                        {% if session.get('customer_id') %}
+                            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-primary w-100">
+                                Go to Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('customer_register') }}" class="btn btn-primary w-100">
+                                Register as Customer
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -1048,9 +1342,15 @@
                     <div class="role-body">
                         <h4>For Farmers</h4>
                         <p>Sell your fresh produce directly to customers without middlemen</p>
-                        <a href="{{ url_for('register') }}" class="btn btn-success w-100">
-                            Register as Farmer
-                        </a>
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-success w-100">
+                                Go to Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('register') }}" class="btn btn-success w-100">
+                                Register as Farmer
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -1061,9 +1361,15 @@
                     <div class="role-body">
                         <h4>For Homemakers</h4>
                         <p>Share your delicious home-cooked meals and earn income</p>
-                        <a href="{{ url_for('employee_register') }}" class="btn btn-warning w-100">
-                            Register as Homemaker
-                        </a>
+                        {% if session.get('employee_id') %}
+                            <a href="{{ url_for('employee_dashboard') }}" class="btn btn-warning w-100">
+                                Go to Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('employee_register') }}" class="btn btn-warning w-100">
+                                Register as Homemaker
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -1072,37 +1378,48 @@
 </section>
 
 <!-- How It Works -->
-<section class="py-5 bg-light">
+<section class="py-4" style="background: white;">
     <div class="container">
-        <h2 class="text-center mb-5 scroll-animate">🚀 How It Works</h2>
+        <div class="text-center mb-4 scroll-animate">
+            <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">🚀 How It Works</h2>
+            <p class="text-muted">Simple Steps to Fresh Organic Goodness</p>
+        </div>
         <div class="row g-4">
-            <div class="col-md-3 text-center scroll-animate">
-                <div class="how-it-works-icon">
-                    <i class="bi bi-person-plus-fill"></i>
+            <div class="col-md-3 col-6 text-center scroll-animate">
+                <div class="how-it-works-step">
+                    <div class="how-it-works-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Register</h5>
+                    <p class="text-muted">Create your account in minutes</p>
                 </div>
-                <h5 class="fw-bold">1. Register</h5>
-                <p class="text-muted">Create your account in minutes</p>
             </div>
-            <div class="col-md-3 text-center scroll-animate">
-                <div class="how-it-works-icon">
-                    <i class="bi bi-search"></i>
+            <div class="col-md-3 col-6 text-center scroll-animate">
+                <div class="how-it-works-step">
+                    <div class="how-it-works-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Browse</h5>
+                    <p class="text-muted">Explore fresh organic produce</p>
                 </div>
-                <h5 class="fw-bold">2. Browse</h5>
-                <p class="text-muted">Explore fresh organic produce</p>
             </div>
-            <div class="col-md-3 text-center scroll-animate">
-                <div class="how-it-works-icon">
-                    <i class="bi bi-cart-check-fill"></i>
+            <div class="col-md-3 col-6 text-center scroll-animate">
+                <div class="how-it-works-step">
+                    <div class="how-it-works-icon">
+                        <i class="bi bi-cart-check-fill"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Order</h5>
+                    <p class="text-muted">Add to cart and checkout securely</p>
                 </div>
-                <h5 class="fw-bold">3. Order</h5>
-                <p class="text-muted">Add to cart and checkout securely</p>
             </div>
-            <div class="col-md-3 text-center scroll-animate">
-                <div class="how-it-works-icon">
-                    <i class="bi bi-truck"></i>
+            <div class="col-md-3 col-6 text-center scroll-animate">
+                <div class="how-it-works-step">
+                    <div class="how-it-works-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h5 class="fw-bold">4. Enjoy</h5>
+                    <p class="text-muted">Fresh delivery within 24 hours</p>
                 </div>
-                <h5 class="fw-bold">4. Enjoy</h5>
-                <p class="text-muted">Fresh delivery within 24 hours</p>
             </div>
         </div>
     </div>
@@ -1127,8 +1444,103 @@
 </section>
 
 <script>
-// Scroll Animation
+// Load Featured Products
 document.addEventListener('DOMContentLoaded', function() {
+    // Fetch featured products from database
+    fetch('/api/featured_products')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('featuredProducts');
+            if (data.products && data.products.length > 0) {
+                let html = '';
+                data.products.slice(0, 6).forEach((product, index) => {
+                    const discount = product.mrp && product.mrp > product.price_per_kg 
+                        ? Math.round(((product.mrp - product.price_per_kg) / product.mrp) * 100) 
+                        : 0;
+                    const rating = product.average_rating || 5.0;
+                    const isLoggedIn = {{ 'true' if session.get('customer_id') else 'false' }};
+                    
+                    html += `
+                        <div class="product-card scroll-animate" style="animation-delay: ${index * 0.1}s">
+                            <div class="product-image">
+                                <img src="/static/uploads/${product.image}" 
+                                     alt="${product.crop_name}"
+                                     onerror="this.src='https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400'">
+                                <span class="product-badge">🌱 Organic</span>
+                                ${discount > 0 ? `<span class="product-badge discount">${discount}% OFF</span>` : ''}
+                            </div>
+                            <div class="product-info">
+                                <span class="product-type">${product.crop_type}</span>
+                                <h5 class="product-title">${product.crop_name}</h5>
+                                <div class="product-farmer">
+                                    <i class="bi bi-person-circle"></i> ${product.farmer_name}
+                                </div>
+                                <div class="product-rating">
+                                    ${'<i class="bi bi-star-fill"></i>'.repeat(Math.floor(rating))}
+                                    ${'<i class="bi bi-star"></i>'.repeat(5 - Math.floor(rating))}
+                                    <span class="text-muted">(${rating.toFixed(1)})</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div>
+                                        <span class="product-price">₹${product.price_per_kg}</span>
+                                        ${product.mrp && product.mrp > product.price_per_kg ? `<span class="product-old-price">₹${product.mrp}</span>` : ''}
+                                        <small class="d-block text-muted">per kg</small>
+                                    </div>
+                                </div>
+                                ${isLoggedIn ? `
+                                    <form method="POST" action="/add_to_cart/${product.id}" class="product-actions">
+                                        <div class="qty-selector">
+                                            <button type="button" onclick="decreaseQty(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                            <input type="number" name="quantity" value="1" min="1" max="${product.quantity}" readonly>
+                                            <button type="button" onclick="increaseQty(this)">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                        <button type="submit" class="btn-add-to-cart">
+                                            <i class="bi bi-cart-plus"></i> Add
+                                        </button>
+                                    </form>
+                                ` : `
+                                    <a href="/customer_login" class="btn-add-to-cart text-center text-decoration-none d-block">
+                                        <i class="bi bi-box-arrow-in-right"></i> Login to Buy
+                                    </a>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center;"><p class="text-muted">No products available at the moment</p></div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading products:', error);
+            document.getElementById('featuredProducts').innerHTML = 
+                '<div style="grid-column: 1/-1; text-align: center;"><p class="text-danger">Error loading products. Please refresh the page.</p></div>';
+        });
+    
+    // Quantity selector functions
+    window.increaseQty = function(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const max = parseInt(input.getAttribute('max'));
+        const current = parseInt(input.value);
+        if (current < max) {
+            input.value = current + 1;
+        }
+    };
+    
+    window.decreaseQty = function(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const current = parseInt(input.value);
+        if (current > 1) {
+            input.value = current - 1;
+        }
+    };
+    
+    // Scroll Animation
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -1181,6 +1593,83 @@ document.addEventListener('DOMContentLoaded', function() {
     counters.forEach(counter => {
         statsObserver.observe(counter);
     });
+    
+    // Parallax Effect
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll('.parallax-bg');
+        
+        parallaxElements.forEach(element => {
+            const speed = 0.5;
+            element.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+    
+    // Add hover effect to product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Add click animation to buttons
+    document.querySelectorAll('.btn-custom').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            this.appendChild(ripple);
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    
+    // Fade in sections on scroll
+    const fadeInObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('section').forEach(section => {
+        section.classList.add('fade-in-section');
+        fadeInObserver.observe(section);
+    });
 });
+
+// Add CSS for ripple effect
+const style = document.createElement('style');
+style.textContent = `
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0);
+        animation: ripple-animation 0.6s ease-out;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 </script>
 {% endblock %}

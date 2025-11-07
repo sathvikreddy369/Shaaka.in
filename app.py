@@ -566,7 +566,7 @@ def admin_dashboard():
     conn.close()
 
     return render_template(
-        'admin_dashboard_new.html',
+        'admin_dashboard_enhanced.html',
         recipe_count=recipe_count,
         customer_count=customer_count,
         farmer_count=farmer_count,
@@ -761,6 +761,51 @@ def customer_login():
 
     return render_template('customer_login.html')
 
+# API endpoint for user's reviews
+@app.route('/api/my_reviews')
+def api_my_reviews():
+    if 'customer_id' not in session:
+        return jsonify({'success': False, 'message': 'Please login'}), 401
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('''
+            SELECT cr.*, c.crop_name, c.image as crop_image, c.id as crop_id
+            FROM crop_reviews cr
+            JOIN crops c ON cr.crop_id = c.id
+            WHERE cr.customer_id = %s
+            ORDER BY cr.created_at DESC
+        ''', (session['customer_id'],))
+        reviews = cursor.fetchall()
+        conn.close()
+        return jsonify({'success': True, 'reviews': reviews})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+# API endpoint for featured products
+@app.route('/api/featured_products')
+def api_featured_products():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('''
+            SELECT crops.*, farmers.name as farmer_name, farmers.location as farmer_location,
+                   COALESCE(AVG(reviews.rating), 5.0) as average_rating
+            FROM crops 
+            JOIN farmers ON crops.farmer_id = farmers.id 
+            LEFT JOIN reviews ON crops.id = reviews.crop_id
+            WHERE crops.quantity > 0
+            GROUP BY crops.id
+            ORDER BY crops.created_at DESC
+            LIMIT 6
+        ''')
+        products = cursor.fetchall()
+        conn.close()
+        return jsonify({'success': True, 'products': products})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/customer_dashboard', methods=['GET'])
 def customer_dashboard():
     if 'customer_id' not in session:
@@ -850,7 +895,7 @@ def farmer_dashboard():
     crops = cursor.fetchall()
     conn.close()
 
-    return render_template('farmer_dashboard_new.html', farmer=current_user, crops=crops)
+    return render_template('farmer_dashboard_enhanced.html', farmer=current_user, crops=crops)
 
 
 # Route to Add Crop (via Upload Form)
@@ -1216,7 +1261,7 @@ def view_cart():
 
     conn.close()
 
-    return render_template('view_cart_new.html', crops_cart=crops_cart, recipes_cart=recipes_cart, 
+    return render_template('view_cart_enhanced.html', crops_cart=crops_cart, recipes_cart=recipes_cart, 
                          grand_total=grand_total, cart_count=cart_count)
 
     #add recipes
@@ -2273,8 +2318,8 @@ def add_review(crop_id):
     finally:
         conn.close()
 
-@app.route('/edit_review/<int:review_id>', methods=['POST'])
-def edit_review(review_id):
+@app.route('/update_review/<int:review_id>', methods=['POST'])
+def update_review(review_id):
     if 'customer_id' not in session:
         return jsonify({'success': False, 'message': 'Please login'}), 401
     
@@ -2372,7 +2417,7 @@ def get_reviews(crop_id):
     
     try:
         cursor.execute('''
-            SELECT cr.*, c.name as customer_name, cr.id as review_id
+            SELECT cr.*, c.name as customer_name, cr.id as id
             FROM crop_reviews cr
             JOIN customers c ON cr.customer_id = c.id
             WHERE cr.crop_id = %s
@@ -2380,19 +2425,15 @@ def get_reviews(crop_id):
         ''', (crop_id,))
         reviews = cursor.fetchall()
         
-        # Check if current user has reviewed
-        user_review = None
-        if 'customer_id' in session:
-            cursor.execute('''
-                SELECT * FROM crop_reviews 
-                WHERE crop_id = %s AND customer_id = %s
-            ''', (crop_id, session['customer_id']))
-            user_review = cursor.fetchone()
+        # Mark user's own reviews
+        current_customer_id = session.get('customer_id')
+        if current_customer_id:
+            for review in reviews:
+                review['is_own_review'] = (review['customer_id'] == current_customer_id)
         
         return jsonify({
             'success': True, 
-            'reviews': reviews,
-            'user_review': user_review
+            'reviews': reviews
         })
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
@@ -2423,6 +2464,51 @@ def customer_profile():
     
     conn.close()
     return render_template('customer_profile.html', customer=customer, addresses=addresses)
+
+@app.route('/update_customer_profile', methods=['POST'])
+def update_customer_profile():
+    if 'customer_id' not in session:
+        flash('Please login to update profile', 'danger')
+        return redirect(url_for('customer_login'))
+    
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    location = request.form.get('location')
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute('''
+            UPDATE customers 
+            SET name = %s, email = %s, phone = %s, location = %s
+            WHERE id = %s
+        ''', (name, email, phone, location, session['customer_id']))
+        
+        conn.commit()
+        
+        # Update session data
+        session['customer_name'] = name
+        session['customer_email'] = email
+        
+        flash('Profile updated successfully!', 'success')
+    except mysql.connector.IntegrityError as e:
+        conn.rollback()
+        if 'Duplicate entry' in str(e):
+            if 'email' in str(e):
+                flash('Email already in use by another account', 'danger')
+            elif 'phone' in str(e):
+                flash('Phone number already in use by another account', 'danger')
+        else:
+            flash('Error updating profile', 'danger')
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error updating profile: {str(e)}', 'danger')
+    finally:
+        conn.close()
+    
+    return redirect(url_for('customer_profile'))
 
 @app.route('/add_address', methods=['POST'])
 def add_address():
