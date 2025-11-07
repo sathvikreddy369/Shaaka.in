@@ -1171,27 +1171,53 @@ def update_cart():
 
 
 @app.route('/add_to_cart', methods=['POST'])
-def add_to_cart():
+@app.route('/add_to_cart/<int:crop_id>', methods=['POST'])
+def add_to_cart(crop_id=None):
     if 'customer_id' not in session:
         flash('You must log in to add items to your cart.', 'danger')
         return redirect(url_for('customer_login'))
 
     customer_id = session['customer_id']
-    crop_id = request.form.get('crop_id')  # For crops
+    
+    # Get crop_id from URL parameter or form data
+    if not crop_id:
+        crop_id = request.form.get('crop_id')
+    
     recipe_id = request.form.get('recipe_id')  # For recipes
+    
+    # Convert empty strings to None and validate
+    try:
+        crop_id = int(crop_id) if crop_id and str(crop_id).strip() else None
+    except (ValueError, TypeError):
+        crop_id = None
+    
+    try:
+        recipe_id = int(recipe_id) if recipe_id and str(recipe_id).strip() else None
+    except (ValueError, TypeError):
+        recipe_id = None
+    
+    # Validate that at least one item type is provided
+    if not crop_id and not recipe_id:
+        flash('Invalid item. Please try again.', 'danger')
+        return redirect(url_for('customer_dashboard'))
+    
     quantity = int(request.form.get('quantity', 1))
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     # Check if item already exists in the cart
-    cursor.execute('''
-        SELECT id, quantity FROM cart
-        WHERE customer_id = %s AND (
-            (crop_id = %s AND %s IS NOT NULL) OR 
-            (recipe_id = %s AND %s IS NOT NULL)
-        )
-    ''', (customer_id, crop_id, crop_id, recipe_id, recipe_id))
+    if crop_id:
+        cursor.execute('''
+            SELECT id, quantity FROM cart
+            WHERE customer_id = %s AND crop_id = %s
+        ''', (customer_id, crop_id))
+    else:
+        cursor.execute('''
+            SELECT id, quantity FROM cart
+            WHERE customer_id = %s AND recipe_id = %s
+        ''', (customer_id, recipe_id))
+    
     existing_item = cursor.fetchone()
 
     if existing_item:
@@ -1209,7 +1235,7 @@ def add_to_cart():
                 conn.close()
                 return redirect(url_for('customer_dashboard'))
             price_per_unit = result['price_per_kg']
-        elif recipe_id:
+        else:  # recipe_id
             cursor.execute('SELECT masala_cost FROM recipes WHERE recipe_id = %s', (recipe_id,))
             result = cursor.fetchone()
             if not result:
@@ -1217,10 +1243,6 @@ def add_to_cart():
                 conn.close()
                 return redirect(url_for('customer_dashboard'))
             price_per_unit = result['masala_cost']
-        else:
-            flash('Invalid item.', 'danger')
-            conn.close()
-            return redirect(url_for('customer_dashboard'))
 
         # Insert the item into the cart
         cursor.execute('''
