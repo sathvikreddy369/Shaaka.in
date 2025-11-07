@@ -1,0 +1,72 @@
+{% extends "admin_base.html" %}
+
+{% block title %}{{ 'Edit' if faq else 'Create' }} FAQ - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="admin-header">
+        <h2><i class="bi bi-question-circle"></i> {{ 'Edit' if faq else 'Create' }} FAQ</h2>
+        <a href="{{ url_for('admin_faqs') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to FAQs
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="question" class="form-label">Question *</label>
+                            <input type="text" class="form-control" id="question" name="question" 
+                                   value="{{ faq.question if faq else '' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="answer" class="form-label">Answer *</label>
+                            <textarea class="form-control" id="answer" name="answer" rows="5" required>{{ faq.answer if faq else '' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="category" class="form-label">Category *</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="General" {% if faq and faq.category == 'General' %}selected{% endif %}>General</option>
+                                    <option value="Orders" {% if faq and faq.category == 'Orders' %}selected{% endif %}>Orders</option>
+                                    <option value="Delivery" {% if faq and faq.category == 'Delivery' %}selected{% endif %}>Delivery</option>
+                                    <option value="Products" {% if faq and faq.category == 'Products' %}selected{% endif %}>Products</option>
+                                    <option value="Payment" {% if faq and faq.category == 'Payment' %}selected{% endif %}>Payment</option>
+                                    <option value="Returns" {% if faq and faq.category == 'Returns' %}selected{% endif %}>Returns</option>
+                                    <option value="Farmers" {% if faq and faq.category == 'Farmers' %}selected{% endif %}>Farmers</option>
+                                    <option value="Account" {% if faq and faq.category == 'Account' %}selected{% endif %}>Account</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="display_order" class="form-label">Display Order</label>
+                                <input type="number" class="form-control" id="display_order" name="display_order" 
+                                       value="{{ faq.display_order if faq else 0 }}" min="0">
+                                <small class="text-muted">Lower numbers appear first</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" 
+                                   {% if not faq or faq.is_active %}checked{% endif %}>
+                            <label class="form-check-label" for="is_active">
+                                Active (visible to users)
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-save"></i> {{ 'Update' if faq else 'Create' }} FAQ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

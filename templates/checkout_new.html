@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    
+    .address-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .address-card:hover {
+        border-color: #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .address-card.selected {
+        border-color: #28a745;
+        background: #f8fff9;
+    }
+    
+    .address-card input[type="radio"] {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .order-summary {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .cart-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    
+    .btn-place-order {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 25px;
+        font-weight: bold;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-credit-card"></i> Checkout
+    </h2>
+    
+    <form method="POST" action="{{ url_for('checkout') }}" id="checkoutForm">
+        <div class="row">
+            <!-- Delivery Address -->
+            <div class="col-md-7">
+                <div class="checkout-container">
+                    <h5 class="mb-4">
+                        <i class="bi bi-geo-alt"></i> Select Delivery Address
+                    </h5>
+                    
+                    {% if addresses %}
+                        {% for address in addresses %}
+                        <div class="address-card {% if address.is_default %}selected{% endif %}" 
+                             onclick="selectAddress({{ address.id }})">
+                            <input type="radio" name="address_id" value="{{ address.id }}" 
+                                   {% if address.is_default %}checked{% endif %} required>
+                            <h6>
+                                <i class="bi bi-house-door"></i> {{ address.address_type }}
+                                {% if address.is_default %}
+                                    <span class="badge bg-success">Default</span>
+                                {% endif %}
+                            </h6>
+                            <p class="mb-0">
+                                {{ address.house_number }}, {{ address.area }}<br>
+                                {% if address.landmark %}{{ address.landmark }}<br>{% endif %}
+                                {{ address.city }}, {{ address.district }}<br>
+                                {{ address.state }} - {{ address.pincode }}
+                            </p>
+                        </div>
+                        {% endfor %}
+                        
+                        <button type="button" class="btn btn-outline-primary w-100 mt-3" 
+                                data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                            <i class="bi bi-plus-circle"></i> Add New Address
+                        </button>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-geo-alt" style="font-size: 3rem; color: #ddd;"></i>
+                            <p class="text-muted mt-3">No addresses saved</p>
+                            <button type="button" class="btn btn-primary" 
+                                    data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <i class="bi bi-plus-circle"></i> Add Delivery Address
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="col-md-5">
+                <div class="order-summary">
+                    <h5 class="mb-4">Order Summary</h5>
+                    
+                    {% if cart %}
+                        {% for item in cart %}
+                        <div class="cart-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ item.food_name }}</strong>
+                                    <div class="text-muted small">Qty: {{ item.quantity }}</div>
+                                </div>
+                                <div>₹{{ "%.2f"|format(item.price * item.quantity) }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <strong>₹{{ "%.2f"|format(total_cost) }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Delivery:</span>
+                            <strong class="text-success">Free</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <h5>Total:</h5>
+                            <h5 class="text-success">₹{{ "%.2f"|format(total_cost) }}</h5>
+                        </div>
+                        
+                        <button type="submit" class="btn-place-order" {% if not addresses %}disabled{% endif %}>
+                            <i class="bi bi-check-circle"></i> Place Order
+                        </button>
+                        
+                        {% if not addresses %}
+                        <p class="text-danger text-center mt-2 small">
+                            Please add a delivery address to continue
+                        </p>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-cart-x" style="font-size: 3rem; color: #ddd;"></i>
+                            <p class="text-muted mt-3">Your cart is empty</p>
+                            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-primary">
+                                Start Shopping
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Delivery Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_address') }}">
+                <input type="hidden" name="redirect_to" value="checkout">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Address Type</label>
+                            <select class="form-select" name="address_type" required>
+                                <option value="Home">Home</option>
+                                <option value="Work">Work</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">House/Flat Number</label>
+                            <input type="text" class="form-control" name="house_number" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Area/Street</label>
+                            <input type="text" class="form-control" name="area" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Landmark (Optional)</label>
+                            <input type="text" class="form-control" name="landmark">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" class="form-control" name="pincode" required pattern="[0-9]{6}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" name="city" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">District</label>
+                            <input type="text" class="form-control" name="district" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" name="state" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectAddress(addressId) {
+    // Remove selected class from all cards
+    document.querySelectorAll('.address-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked card
+    event.currentTarget.classList.add('selected');
+    
+    // Check the radio button
+    document.querySelector(`input[value="${addressId}"]`).checked = true;
+}
+</script>
+{% endblock %}

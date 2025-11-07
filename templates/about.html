@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Shaaka{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 mb-4">🌾 About Shaaka</h1>
+            <p class="lead">Connecting farmers directly with consumers for a healthier, sustainable future</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4">
+            <h2 class="text-success mb-3">Our Story</h2>
+            <p>Shaaka was born from a simple observation: the best produce comes straight from the farm, but most people never get to experience that freshness. We saw farmers struggling to get fair prices while consumers paid premium rates for produce that had traveled through multiple middlemen.</p>
+            <p>We decided to change that. By creating a direct connection between organic farmers and health-conscious consumers, we're revolutionizing how fresh produce reaches your table.</p>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <h2 class="text-success mb-3">Our Mission</h2>
+            <p>To make organic, farm-fresh produce accessible to everyone while ensuring farmers receive fair compensation for their hard work. We believe in:</p>
+            <ul>
+                <li>Supporting sustainable, organic farming practices</li>
+                <li>Eliminating middlemen to benefit both farmers and consumers</li>
+                <li>Delivering maximum freshness within 24 hours of harvest</li>
+                <li>Building strong local communities through food</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mb-5 bg-light p-5 rounded">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-success">Our Values</h2>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <i class="bi bi-heart-fill text-danger" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Integrity</h4>
+            <p>Honest, transparent dealings with farmers and customers</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <i class="bi bi-leaf-fill text-success" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Sustainability</h4>
+            <p>Promoting eco-friendly farming and reducing carbon footprint</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Community</h4>
+            <p>Building strong relationships between farmers and consumers</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <i class="bi bi-award-fill text-warning" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Quality</h4>
+            <p>Never compromising on the quality of produce</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-success">Why Organic Matters</h2>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body">
+                    <h4 class="card-title text-success">For Your Health</h4>
+                    <ul>
+                        <li>No harmful pesticides or chemicals</li>
+                        <li>Higher nutritional content</li>
+                        <li>Better taste and natural flavors</li>
+                        <li>Reduced risk of health issues</li>
+                        <li>Safe for children and pregnant women</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body">
+                    <h4 class="card-title text-success">For The Environment</h4>
+                    <ul>
+                        <li>Protects soil health and biodiversity</li>
+                        <li>Reduces water pollution</li>
+                        <li>Promotes sustainable farming</li>
+                        <li>Lower carbon emissions</li>
+                        <li>Preserves ecosystems for future generations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-success">Our Impact</h2>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="display-4 text-success">2500+</div>
+            <p class="lead">Happy Families</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="display-4 text-success">150+</div>
+            <p class="lead">Organic Farmers</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="display-4 text-success">5000+</div>
+            <p class="lead">Fresh Deliveries</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="display-4 text-success">50km</div>
+            <p class="lead">Local Sourcing Radius</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center bg-success text-white p-5 rounded">
+            <h2 class="mb-3">Join Our Community</h2>
+            <p class="lead mb-4">Be part of the organic food revolution. Support local farmers and enjoy the freshest produce.</p>
+            <a href="{{ url_for('customer_register') }}" class="btn btn-light btn-lg">Get Started Today</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

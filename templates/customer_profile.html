@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .address-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .address-card:hover {
+        border-color: #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .address-card.default {
+        border-color: #28a745;
+        background: #f8fff9;
+    }
+    
+    .default-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #28a745;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-add-address {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+    }
+    
+    .info-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #333;
+        font-size: 1.1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="{{ url_for('static', filename='uploads/' + (customer.profile_image or 'default-avatar.png')) }}" 
+                     class="profile-avatar" alt="{{ customer.name }}">
+            </div>
+            <div class="col-md-10">
+                <h2>{{ customer.name }}</h2>
+                <p class="mb-0">
+                    <i class="bi bi-envelope"></i> {{ customer.email }} &nbsp;&nbsp;
+                    <i class="bi bi-phone"></i> {{ customer.phone }}
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-geo-alt"></i> {{ customer.location }}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Personal Information -->
+        <div class="col-md-6">
+            <div class="section-card">
+                <h4 class="mb-4">
+                    <i class="bi bi-person-circle"></i> Personal Information
+                </h4>
+                
+                <div class="info-item">
+                    <div class="info-label">Full Name</div>
+                    <div class="info-value">{{ customer.name }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value">{{ customer.email }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Primary Phone</div>
+                    <div class="info-value">{{ customer.phone }}</div>
+                </div>
+                
+                {% if customer.alternate_phone %}
+                <div class="info-item">
+                    <div class="info-label">Alternate Phone</div>
+                    <div class="info-value">{{ customer.alternate_phone }}</div>
+                </div>
+                {% endif %}
+                
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    <div class="info-value">{{ customer.location }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">{{ customer.created_at.strftime('%B %d, %Y') if customer.created_at else 'N/A' }}</div>
+                </div>
+                
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                    <i class="bi bi-pencil"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+        
+        <!-- Saved Addresses -->
+        <div class="col-md-6">
+            <div class="section-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
+                        <i class="bi bi-geo-alt"></i> Saved Addresses
+                    </h4>
+                    <button class="btn btn-add-address btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="bi bi-plus-circle"></i> Add New
+                    </button>
+                </div>
+                
+                {% if addresses %}
+                    {% for address in addresses %}
+                    <div class="address-card {% if address.is_default %}default{% endif %}">
+                        {% if address.is_default %}
+                            <span class="default-badge">Default</span>
+                        {% endif %}
+                        
+                        <h6>
+                            <i class="bi bi-house-door"></i> {{ address.address_type }}
+                        </h6>
+                        <p class="mb-2">
+                            {{ address.house_number }}, {{ address.area }}<br>
+                            {% if address.landmark %}{{ address.landmark }}<br>{% endif %}
+                            {{ address.city }}, {{ address.district }}<br>
+                            {{ address.state }} - {{ address.pincode }}
+                        </p>
+                        
+                        <div class="btn-group btn-group-sm">
+                            {% if not address.is_default %}
+                            <form method="POST" action="{{ url_for('set_default_address', address_id=address.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="bi bi-check-circle"></i> Set Default
+                                </button>
+                            </form>
+                            {% endif %}
+                            <form method="POST" action="{{ url_for('delete_address', address_id=address.id) }}" 
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Delete this address?');">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-geo-alt" style="font-size: 3rem; color: #ddd;"></i>
+                        <p class="text-muted mt-3">No addresses saved yet</p>
+                        <button class="btn btn-add-address" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                            Add Your First Address
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_address') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Address Type</label>
+                            <select class="form-select" name="address_type" required>
+                                <option value="Home">Home</option>
+                                <option value="Work">Work</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">House/Flat Number</label>
+                            <input type="text" class="form-control" name="house_number" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Area/Street</label>
+                            <input type="text" class="form-control" name="area" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Landmark (Optional)</label>
+                            <input type="text" class="form-control" name="landmark">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" class="form-control" name="pincode" required pattern="[0-9]{6}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" name="city" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">District</label>
+                            <input type="text" class="form-control" name="district" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" name="state" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="getCurrentLocation()">
+                                <i class="bi bi-geo-alt"></i> Use Current Location
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Latitude (Optional)</label>
+                            <input type="text" class="form-control" name="latitude" id="latitude" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Longitude (Optional)</label>
+                            <input type="text" class="form-control" name="longitude" id="longitude" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="is_default" value="1" id="isDefault">
+                                <label class="form-check-label" for="isDefault">
+                                    Set as default address
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('customer_profile') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ customer.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alternate Phone</label>
+                        <input type="tel" class="form-control" name="alternate_phone" 
+                               value="{{ customer.alternate_phone or '' }}" pattern="[0-9]{10}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+            document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+            alert('Location captured successfully!');
+        }, function(error) {
+            alert('Error getting location: ' + error.message);
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Product Management - Shaaka Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .product-table {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .product-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    .status-available {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-unavailable {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="admin-header">
+        <h2><i class="bi bi-box-seam"></i> Product Management</h2>
+        <p class="mb-0">Manage all products across the platform</p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filter-section">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <select class="form-select" id="filterType">
+                    <option value="">All Types</option>
+                    <option value="Vegetable">Vegetables</option>
+                    <option value="Fruit">Fruits</option>
+                    <option value="Food Grains">Food Grains</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filterStatus">
+                    <option value="">All Status</option>
+                    <option value="1">Available</option>
+                    <option value="0">Unavailable</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchProduct" 
+                       placeholder="Search products or farmers...">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Products Table -->
+    <div class="product-table">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="productsTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Farmer</th>
+                        <th>Price</th>
+                        <th>MRP</th>
+                        <th>Discount</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr data-type="{{ product.crop_type }}" data-status="{{ product.is_available }}">
+                        <td>
+                            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" 
+                                 class="product-img" alt="{{ product.crop_name }}">
+                        </td>
+                        <td>
+                            <strong>{{ product.crop_name }}</strong>
+                            <div class="small text-muted">ID: {{ product.id }}</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ product.crop_type }}</span>
+                        </td>
+                        <td>
+                            <div>{{ product.farmer_name }}</div>
+                            <div class="small text-muted">{{ product.farmer_location }}</div>
+                        </td>
+                        <td>₹{{ product.price_per_kg }}/kg</td>
+                        <td>₹{{ product.mrp or product.price_per_kg }}/kg</td>
+                        <td>
+                            {% if product.discount and product.discount > 0 %}
+                                <span class="badge bg-danger">{{ product.discount }}% OFF</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge {% if product.quantity < 20 %}bg-danger{% elif product.quantity < 50 %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ product.quantity }} kg
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge {% if product.is_available %}status-available{% else %}status-unavailable{% endif %}">
+                                {% if product.is_available %}Available{% else %}Unavailable{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="text-warning">
+                                {% for i in range(5) %}
+                                    {% if i < (product.average_rating or 0)|int %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="small text-muted">({{ product.review_count or 0 }})</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <form method="POST" action="{{ url_for('admin_toggle_product', crop_id=product.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-{% if product.is_available %}warning{% else %}success{% endif %}" 
+                                            title="Toggle Availability">
+                                        <i class="bi bi-{% if product.is_available %}eye-slash{% else %}eye{% endif %}"></i>
+                                    </button>
+                                </form>
+                                <button class="btn btn-outline-primary" 
+                                        onclick="showOfferModal({{ product.id }}, '{{ product.crop_name }}')"
+                                        title="Add Offer">
+                                    <i class="bi bi-tag"></i>
+                                </button>
+                                <button class="btn btn-outline-info" 
+                                        onclick="showProductDetails({{ product.id }})"
+                                        title="View Details">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Offer Modal -->
+<div class="modal fade" id="offerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Offer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="offerForm">
+                <div class="modal-body">
+                    <input type="hidden" id="offerCropId" name="crop_id">
+                    <div class="mb-3">
+                        <label class="form-label">Product</label>
+                        <input type="text" class="form-control" id="offerProductName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Offer Name</label>
+                        <input type="text" class="form-control" name="offer_name" required
+                               placeholder="e.g., Weekend Special">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Discount (%)</label>
+                        <input type="number" class="form-control" name="discount" required
+                               min="1" max="90" placeholder="e.g., 20">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" name="start_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" name="end_date" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Offer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter functionality
+document.getElementById('filterType').addEventListener('change', filterTable);
+document.getElementById('filterStatus').addEventListener('change', filterTable);
+document.getElementById('searchProduct').addEventListener('input', filterTable);
+
+function filterTable() {
+    const type = document.getElementById('filterType').value;
+    const status = document.getElementById('filterStatus').value;
+    const search = document.getElementById('searchProduct').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('#productsTable tbody tr');
+    
+    rows.forEach(row => {
+        const rowType = row.dataset.type;
+        const rowStatus = row.dataset.status;
+        const rowText = row.textContent.toLowerCase();
+        
+        const typeMatch = !type || rowType === type;
+        const statusMatch = !status || rowStatus === status;
+        const searchMatch = !search || rowText.includes(search);
+        
+        if (typeMatch && statusMatch && searchMatch) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function showOfferModal(cropId, productName) {
+    document.getElementById('offerCropId').value = cropId;
+    document.getElementById('offerProductName').value = productName;
+    document.getElementById('offerForm').action = `/admin_add_offer/${cropId}`;
+    new bootstrap.Modal(document.getElementById('offerModal')).show();
+}
+
+function showProductDetails(cropId) {
+    // Implement product details view
+    alert('Product details view - To be implemented');
+}
+</script>
+{% endblock %}

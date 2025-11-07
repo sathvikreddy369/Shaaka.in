@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-top: 20px;
+    }
+    
+    .cart-item {
+        border-bottom: 1px solid #eee;
+        padding: 20px 0;
+        transition: background 0.3s;
+    }
+    
+    .cart-item:hover {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px 15px;
+    }
+    
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    
+    .cart-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .quantity-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: 2px solid #28a745;
+        background: white;
+        color: #28a745;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .quantity-btn:hover {
+        background: #28a745;
+        color: white;
+    }
+    
+    .quantity-display {
+        min-width: 40px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .summary-card {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 25px;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .btn-checkout {
+        background: white;
+        color: #28a745;
+        border: none;
+        padding: 15px;
+        border-radius: 25px;
+        font-weight: bold;
+        width: 100%;
+        transition: all 0.3s;
+    }
+    
+    .btn-checkout:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-cart i {
+        font-size: 5rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-cart3"></i> Shopping Cart
+    </h2>
+    
+    {% if crops_cart or recipes_cart %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="cart-container">
+                <!-- Crops in Cart -->
+                {% if crops_cart %}
+                    <h5 class="mb-3">
+                        <i class="bi bi-basket"></i> Fresh Crops
+                    </h5>
+                    {% for item in crops_cart %}
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" 
+                                     class="cart-image" alt="{{ item.crop_name }}">
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="mb-1">{{ item.crop_name }}</h6>
+                                <p class="text-muted mb-0">₹{{ item.price_per_kg }}/kg</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <form method="POST" action="{{ url_for('update_crop_quantity') }}" style="display: inline;">
+                                        <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="decrease">
+                                        <button type="submit" class="quantity-btn">-</button>
+                                    </form>
+                                    <span class="quantity-display">{{ item.quantity }}</span>
+                                    <form method="POST" action="{{ url_for('update_crop_quantity') }}" style="display: inline;">
+                                        <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="increase">
+                                        <button type="submit" class="quantity-btn">+</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <strong>₹{{ "%.2f"|format(item.total_cost) }}</strong>
+                            </div>
+                            <div class="col-md-1">
+                                <form method="POST" action="{{ url_for('delete_crop_cart') }}">
+                                    <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Recipes in Cart -->
+                {% if recipes_cart %}
+                    <h5 class="mb-3 mt-4">
+                        <i class="bi bi-book"></i> Recipe Masalas
+                    </h5>
+                    {% for item in recipes_cart %}
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" 
+                                     class="cart-image" alt="{{ item.recipe_name }}">
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="mb-1">{{ item.recipe_name }} Masala</h6>
+                                <p class="text-muted mb-0">₹{{ item.masala_cost }}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <form method="POST" action="{{ url_for('update_recipe_quantity') }}" style="display: inline;">
+                                        <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="decrease">
+                                        <button type="submit" class="quantity-btn">-</button>
+                                    </form>
+                                    <span class="quantity-display">{{ item.quantity }}</span>
+                                    <form method="POST" action="{{ url_for('update_recipe_quantity') }}" style="display: inline;">
+                                        <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="increase">
+                                        <button type="submit" class="quantity-btn">+</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <strong>₹{{ "%.2f"|format(item.total_cost) }}</strong>
+                            </div>
+                            <div class="col-md-1">
+                                <form method="POST" action="{{ url_for('delete_recipe') }}">
+                                    <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="summary-card">
+                <h5 class="mb-4">Order Summary</h5>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Subtotal:</span>
+                    <strong>₹{{ "%.2f"|format(grand_total) }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Delivery:</span>
+                    <strong>Free</strong>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.3);">
+                <div class="d-flex justify-content-between mb-4">
+                    <h5>Total:</h5>
+                    <h5>₹{{ "%.2f"|format(grand_total) }}</h5>
+                </div>
+                <form method="POST" action="{{ url_for('proceed_to_pay') }}">
+                    <button type="submit" class="btn-checkout">
+                        <i class="bi bi-credit-card"></i> Proceed to Checkout
+                    </button>
+                </form>
+                <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-light w-100 mt-3">
+                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="cart-container">
+        <div class="empty-cart">
+            <i class="bi bi-cart-x"></i>
+            <h4>Your cart is empty</h4>
+            <p class="text-muted">Add some items to get started!</p>
+            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-primary btn-lg mt-3">
+                <i class="bi bi-shop"></i> Start Shopping
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

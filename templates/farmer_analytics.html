@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Analytics - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stats-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .product-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .product-item:last-child {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-graph-up"></i> Sales Analytics
+    </h2>
+    
+    <!-- Stats Overview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stats-card">
+                <i class="bi bi-currency-rupee stats-icon text-success"></i>
+                <div class="stats-number">₹{{ "%.0f"|format(stats.total_revenue or 0) }}</div>
+                <div class="text-muted">Total Revenue</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <i class="bi bi-box-seam stats-icon text-primary"></i>
+                <div class="stats-number">{{ stats.total_quantity or 0 }}</div>
+                <div class="text-muted">Total Sold (kg)</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <i class="bi bi-people stats-icon text-info"></i>
+                <div class="stats-number">{{ stats.total_customers or 0 }}</div>
+                <div class="text-muted">Total Customers</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Sales Chart -->
+        <div class="col-md-8">
+            <div class="chart-card">
+                <h5 class="mb-4">Sales Over Time (Last 30 Days)</h5>
+                {% if sales_data %}
+                <canvas id="salesChart"></canvas>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-graph-up" style="font-size: 3rem; color: #ddd;"></i>
+                    <p class="text-muted mt-3">No sales data available yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Top Products -->
+        <div class="col-md-4">
+            <div class="chart-card">
+                <h5 class="mb-4">Top Selling Products</h5>
+                {% if top_products %}
+                    {% for product in top_products %}
+                    <div class="product-item">
+                        <div>
+                            <strong>{{ product.crop_name }}</strong>
+                            <div class="text-muted small">{{ product.total_sold }} kg sold</div>
+                        </div>
+                        <div class="text-success">
+                            <strong>₹{{ "%.0f"|format(product.revenue) }}</strong>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-basket" style="font-size: 3rem; color: #ddd;"></i>
+                        <p class="text-muted mt-3">No sales yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+{% if sales_data %}
+const ctx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for sale in sales_data|reverse %}
+            '{{ sale.date.strftime("%b %d") }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Revenue (₹)',
+            data: [
+                {% for sale in sales_data|reverse %}
+                {{ sale.total_revenue }},
+                {% endfor %}
+            ],
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return '₹' + value;
+                    }
+                }
+            }
+        }
+    }
+});
+{% endif %}
+</script>
+{% endblock %}

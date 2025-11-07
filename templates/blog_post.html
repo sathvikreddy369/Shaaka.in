@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.title }} - Shaaka Blog{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <article>
+                <h1 class="display-5 mb-3">{{ blog.title }}</h1>
+                
+                <div class="text-muted mb-4">
+                    <i class="bi bi-person-circle"></i> By {{ blog.author_name }} | 
+                    <i class="bi bi-calendar3"></i> {{ blog.created_at.strftime('%B %d, %Y') }} |
+                    <i class="bi bi-eye"></i> {{ blog.views }} views
+                </div>
+
+                {% if blog.tags %}
+                <div class="mb-4">
+                    {% for tag in blog.tags.split(',') %}
+                    <span class="badge bg-success">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if blog.featured_image %}
+                <img src="{{ url_for('static', filename='uploads/' + blog.featured_image) }}" 
+                     class="img-fluid rounded mb-4" alt="{{ blog.title }}">
+                {% endif %}
+
+                <div class="blog-content">
+                    {{ blog.content|safe }}
+                </div>
+
+                <hr class="my-5">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('blog') }}" class="btn btn-outline-success">
+                        <i class="bi bi-arrow-left"></i> Back to Blog
+                    </a>
+                    <div>
+                        <strong>Share:</strong>
+                        <a href="#" class="btn btn-sm btn-outline-primary ms-2">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            {% if related_posts %}
+            <div class="mt-5">
+                <h3 class="mb-4">Related Posts</h3>
+                <div class="row">
+                    {% for post in related_posts %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ post.title }}</h6>
+                                <p class="card-text small text-muted">
+                                    {{ post.excerpt or post.content[:80] + '...' }}
+                                </p>
+                                <a href="{{ url_for('blog_post', slug=post.slug) }}" class="btn btn-sm btn-outline-success">
+                                    Read More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.blog-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+.blog-content h3 {
+    color: #28a745;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.blog-content ul, .blog-content ol {
+    margin-bottom: 1.5rem;
+}
+.blog-content p {
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %}

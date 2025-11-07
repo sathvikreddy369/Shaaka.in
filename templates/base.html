@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Farmer Market{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+    
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --secondary-color: #218838;
+            --accent-color: #ffc107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            transition: all 0.3s;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: var(--accent-color) !important;
+            font-weight: 600;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: var(--accent-color);
+            color: #000;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .alert {
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        footer {
+            background: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .nav-link {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="bi bi-shop"></i> Shaaka
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    
+                    {% if session.get('customer_id') %}
+                        <!-- Customer Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('customer_dashboard') }}">
+                                <i class="bi bi-grid"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('cooked_foods') }}">
+                                <i class="bi bi-egg-fried"></i> Cooked Foods
+                            </a>
+                        </li>
+                        <li class="nav-item position-relative">
+                            <a class="nav-link" href="{{ url_for('view_cart') }}">
+                                <i class="bi bi-cart3"></i> Cart
+                                {% if cart_count and cart_count > 0 %}
+                                    <span class="cart-badge">{{ cart_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('my_orders') }}">
+                                <i class="bi bi-bag-check"></i> Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('customer_profile') }}">
+                                <i class="bi bi-person-circle"></i> Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    
+                    {% elif session.get('employee_id') %}
+                        <!-- Employee Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('employee_dashboard') }}">
+                                <i class="bi bi-grid"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('upload_food') }}">
+                                <i class="bi bi-upload"></i> Upload Food
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('employee_orders') }}">
+                                <i class="bi bi-list-check"></i> Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    
+                    {% elif current_user.is_authenticated %}
+                        <!-- Farmer Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('farmer_dashboard') }}">
+                                <i class="bi bi-grid"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('add_crop') }}">
+                                <i class="bi bi-plus-circle"></i> Add Crop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('farmer_analytics') }}">
+                                <i class="bi bi-graph-up"></i> Analytics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    
+                    {% elif session.get('admin_id') %}
+                        <!-- Admin Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_products') }}">
+                                <i class="bi bi-box-seam"></i> Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_blogs') }}">
+                                <i class="bi bi-file-text"></i> Blogs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_faqs') }}">
+                                <i class="bi bi-question-circle"></i> FAQs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('add_recipe') }}">
+                                <i class="bi bi-journal-plus"></i> Add Recipe
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    
+                    {% else %}
+                        <!-- Guest Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}">
+                                <i class="bi bi-info-circle"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('blog') }}">
+                                <i class="bi bi-file-text"></i> Blog
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('faq') }}">
+                                <i class="bi bi-question-circle"></i> FAQ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('contact') }}">
+                                <i class="bi bi-envelope"></i> Contact
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> Login
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('customer_login') }}">Customer Login</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('login') }}">Farmer Login</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('employee_login') }}">Homemaker Login</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-plus"></i> Register
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('customer_register') }}">Customer Register</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('register') }}">Farmer Register</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('employee_register') }}">Homemaker Register</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <div class="row py-4">
+                <div class="col-md-4 mb-3">
+                    <h5>About Shaaka</h5>
+                    <p class="small">Connecting farmers directly with customers for fresh, organic produce and home-cooked meals.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <div class="d-flex flex-column">
+                        <a href="{{ url_for('home') }}" class="text-white text-decoration-none mb-2">Home</a>
+                        <a href="{{ url_for('about') }}" class="text-white text-decoration-none mb-2">About Us</a>
+                        <a href="{{ url_for('blog') }}" class="text-white text-decoration-none mb-2">Blog</a>
+                        <a href="{{ url_for('faq') }}" class="text-white text-decoration-none mb-2">FAQ</a>
+                        <a href="{{ url_for('contact') }}" class="text-white text-decoration-none mb-2">Contact</a>
+                        <a href="{{ url_for('privacy') }}" class="text-white text-decoration-none mb-2">Privacy Policy</a>
+                        <a href="{{ url_for('terms') }}" class="text-white text-decoration-none mb-2">Terms of Service</a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Login Portals</h5>
+                    <div class="d-flex flex-column">
+                        <a href="{{ url_for('customer_login') }}" class="text-white text-decoration-none mb-2">
+                            <i class="bi bi-person"></i> Customer Login
+                        </a>
+                        <a href="{{ url_for('login') }}" class="text-white text-decoration-none mb-2">
+                            <i class="bi bi-tree"></i> Farmer Login
+                        </a>
+                        <a href="{{ url_for('employee_login') }}" class="text-white text-decoration-none mb-2">
+                            <i class="bi bi-house-heart"></i> Homemaker Login
+                        </a>
+                        <a href="{{ url_for('admin_login') }}" class="text-white text-decoration-none mb-2">
+                            <i class="bi bi-shield-lock"></i> Admin Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.3);">
+            <p class="mb-0">&copy; 2024 Shaaka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
