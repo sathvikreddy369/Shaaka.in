@@ -87,16 +87,40 @@ fi
 
 # Import sample data
 echo ""
-echo -e "${YELLOW}Do you want to import sample data for testing? (y/n)${NC}"
+echo "========================================"
+echo "Sample Data Import"
+echo "========================================"
+echo ""
+echo "Sample data includes:"
+echo "  - Demo user accounts (Admin, Customer, Farmer, Homemaker)"
+echo "  - 6 sample products (vegetables and fruits)"
+echo "  - 4 sample food items (home-cooked meals)"
+echo "  - 6 product reviews"
+echo "  - 3 blog posts"
+echo "  - 10 FAQs"
+echo ""
+echo -e "${YELLOW}Do you want to import sample/dummy data for testing? (y/n)${NC}"
 read -r IMPORT_SAMPLE
 if [ "$IMPORT_SAMPLE" = "y" ] || [ "$IMPORT_SAMPLE" = "Y" ]; then
+    echo ""
     echo "Importing sample data..."
     mysql -u root -p"$MYSQL_PASSWORD" farmer_market < sample_data.sql 2>/dev/null
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Sample data imported${NC}"
+        echo -e "${GREEN}✓ Sample data imported successfully!${NC}"
+        echo ""
+        echo "Demo Accounts Created:"
+        echo "  Admin:     admin@farmermarket.com / password123"
+        echo "  Customer:  customer@example.com / password123"
+        echo "  Farmer:    9876543220 / password123"
+        echo "  Homemaker: homemaker@example.com / password123"
     else
         echo -e "${YELLOW}⚠ Sample data import failed. You can import it manually later.${NC}"
+        echo "Run: mysql -u root -p farmer_market < sample_data.sql"
     fi
+else
+    echo -e "${YELLOW}[INFO] Skipping sample data import.${NC}"
+    echo "You can import it later by running:"
+    echo "  mysql -u root -p farmer_market < sample_data.sql"
 fi
 
 # Update database credentials in app.py

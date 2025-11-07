@@ -137,6 +137,18 @@ mysql -u root -p farmer_market < add_blog_schema.sql
 ```
 
 ### 7. Add Sample Data (Optional)
+
+#### Option A: Using Seed Script (Recommended)
+```bash
+# macOS/Linux
+chmod +x seed_data.sh
+./seed_data.sh
+
+# Windows
+seed_data.bat
+```
+
+#### Option B: Manual Import
 ```bash
 mysql -u root -p farmer_market < sample_data.sql
 ```
@@ -166,7 +178,7 @@ The application will be available at: `http://localhost:5001`
 - **Access:** Browse products, place orders, manage profile
 
 ### Farmer Account
-- **Email:** farmer@example.com
+- **Phone:** 9876543220
 - **Password:** password123
 - **Access:** Manage products, view sales, analytics
 
@@ -174,6 +186,8 @@ The application will be available at: `http://localhost:5001`
 - **Email:** homemaker@example.com
 - **Password:** password123
 - **Access:** Upload food items, manage listings
+
+> 📋 **Note:** For complete details about all sample data including additional accounts, products, and test scenarios, see [SAMPLE_DATA_INFO.md](SAMPLE_DATA_INFO.md)
 
 ## 📁 Project Structure
 
