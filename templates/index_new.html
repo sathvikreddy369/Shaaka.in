@@ -6,9 +6,10 @@
 <style>
     /* Organic Theme Background */
     body {
-        background: #faf8f3;
+        background: linear-gradient(180deg, #faf8f3 0%, #f5f9f0 50%, #faf8f3 100%);
         position: relative;
         overflow-x: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* Smooth Scroll */
@@ -25,16 +26,34 @@
         width: 100%;
         height: 100%;
         background-image: 
-            radial-gradient(circle at 20% 50%, rgba(139, 195, 74, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 193, 7, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 20%, rgba(76, 175, 80, 0.15) 0%, transparent 50%);
-        animation: backgroundShift 20s ease-in-out infinite;
+            radial-gradient(circle at 20% 50%, rgba(139, 195, 74, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(76, 175, 80, 0.08) 0%, transparent 50%);
+        animation: backgroundShift 30s ease-in-out infinite;
         z-index: -1;
     }
     
     @keyframes backgroundShift {
         0%, 100% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(50px, 30px) scale(1.1); }
+        50% { transform: translate(30px, 20px) scale(1.05); }
+    }
+    
+    /* Container improvements */
+    .container {
+        max-width: 1200px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    /* Section spacing */
+    section {
+        padding: 80px 0 !important;
+    }
+    
+    @media (max-width: 768px) {
+        section {
+            padding: 50px 0 !important;
+        }
     }
     
     /* Parallax Effect */
@@ -83,15 +102,71 @@
         content: '';
         position: absolute;
         top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.15;
+        transition: all 0.6s;
+        z-index: 0;
+        filter: brightness(1.2);
+    }
+    
+    .trust-badge:hover::before {
+        opacity: 0.25;
+        transform: scale(1.05);
+    }
+    
+    .trust-badge::after {
+        content: '';
+        position: absolute;
+        top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
         transition: left 0.6s;
+        z-index: 0;
     }
     
-    .trust-badge:hover::before {
+    .trust-badge:hover::after {
         left: 100%;
+    }
+    
+    .trust-badge > * {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Specific backgrounds for trust badges */
+    .trust-badge:has(h4:contains("Certified Organic"))::before,
+    .trust-badge:nth-of-type(1)::before {
+        background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600');
+    }
+    
+    .trust-badge:nth-of-type(2)::before {
+        background-image: url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600');
+    }
+    
+    .trust-badge:nth-of-type(3)::before {
+        background-image: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600');
+    }
+    
+    .trust-badge:nth-of-type(4)::before {
+        background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=600');
+    }
+    
+    .trust-badge:nth-of-type(5)::before {
+        background-image: url('https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600');
+    }
+    
+    .trust-badge:nth-of-type(6)::before {
+        background-image: url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=600');
+    }
+    
+    .trust-badge:nth-of-type(7)::before {
+        background-image: url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600');
     }
     
     .trust-badge:hover {
@@ -129,6 +204,130 @@
         background: linear-gradient(90deg, transparent, #8bc34a, transparent);
         border-radius: 2px;
     }
+    
+    /* Section Headings */
+    section h2 {
+        position: relative;
+        display: inline-block;
+        padding-bottom: 15px;
+    }
+    
+    section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #8bc34a, #4caf50);
+        border-radius: 2px;
+    }
+    
+    .text-center h2 {
+        margin-bottom: 30px;
+    }
+    
+    .text-muted {
+        color: #666 !important;
+        font-size: 1.1rem;
+    }
+    
+    /* Crop Image Backgrounds */
+    .crop-bg-section {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .crop-bg-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.15;
+        animation: floatBackground 30s ease-in-out infinite;
+        z-index: 0;
+        pointer-events: none;
+        filter: brightness(1.1);
+    }
+    
+    .crop-bg-section.features-bg::after {
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+            url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1200');
+    }
+    
+    .crop-bg-section.trust-bg::after {
+        background-image: 
+            linear-gradient(rgba(248,253,249,0.3), rgba(232,245,233,0.3)),
+            url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200');
+        opacity: 0.25;
+    }
+    
+    .crop-bg-section.testimonials-bg::after {
+        background-image: 
+            linear-gradient(rgba(250,248,243,0.7), rgba(250,248,243,0.7)),
+            url('https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=1200');
+    }
+    
+    .crop-bg-section.join-bg::after {
+        background-image: 
+            linear-gradient(rgba(255,248,225,0.6), rgba(255,236,179,0.6)),
+            url('https://images.unsplash.com/photo-1595855759920-86582396756a?w=1200');
+    }
+    
+    .crop-bg-section.how-it-works-bg::after {
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
+            url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1200');
+    }
+    
+    .crop-bg-section .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    @keyframes floatBackground {
+        0%, 100% { transform: scale(1) translateY(0); }
+        50% { transform: scale(1.08) translateY(-15px); }
+    }
+    
+    /* Floating Crop Icons */
+    .floating-crops {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+        pointer-events: none;
+    }
+    
+    .floating-crop {
+        position: absolute;
+        font-size: 3rem;
+        opacity: 0.08;
+        animation: float 25s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-40px) rotate(8deg); }
+        50% { transform: translateY(-80px) rotate(-8deg); }
+        75% { transform: translateY(-40px) rotate(8deg); }
+    }
+    
+    .floating-crop:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; color: #8bc34a; }
+    .floating-crop:nth-child(2) { top: 20%; right: 10%; animation-delay: 3s; color: #ff9800; }
+    .floating-crop:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 6s; color: #4caf50; }
+    .floating-crop:nth-child(4) { bottom: 25%; right: 5%; animation-delay: 9s; color: #ffc107; }
+    .floating-crop:nth-child(5) { top: 50%; left: 8%; animation-delay: 12s; color: #66bb6a; }
+    .floating-crop:nth-child(6) { top: 60%; right: 12%; animation-delay: 15s; color: #ffb74d; }
     
     /* Organic Patterns */
     .organic-pattern {
@@ -214,15 +413,15 @@
     /* Hero Carousel Styles */
     .hero-carousel {
         position: relative;
-        height: 500px;
+        height: 600px;
         overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        border-radius: 0 0 30px 30px;
-        margin-bottom: 60px;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+        border-radius: 0 0 40px 40px;
+        margin-bottom: 80px;
     }
     
     .carousel-item {
-        height: 500px;
+        height: 600px;
         background-size: cover;
         background-position: center;
         position: relative;
@@ -234,7 +433,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.85) 0%, rgba(33, 136, 56, 0.85) 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.5) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -245,10 +444,16 @@
         color: white;
         z-index: 2;
         animation: fadeInUp 1s ease-out;
+        max-width: 800px;
+        padding: 0 20px;
     }
     
     .carousel-content h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
         font-weight: 800;
         margin-bottom: 15px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -346,35 +551,70 @@
         border: 2px solid #f0f0f0;
     }
     
+    /* Background images for feature cards */
     .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.12;
+        transition: all 0.6s;
+        z-index: 0;
+        filter: brightness(1.1);
+    }
+    
+    .feature-card:nth-child(1)::before {
+        background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800');
+    }
+    
+    .feature-card:nth-child(2)::before {
+        background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800');
+    }
+    
+    .feature-card:nth-child(3)::before {
+        background-image: url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800');
+    }
+    
+    .feature-card:nth-child(4)::before {
+        background-image: url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800');
+    }
+    
+    .feature-card:nth-child(5)::before {
+        background-image: url('https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800');
+    }
+    
+    .feature-card:nth-child(6)::before {
+        background-image: url('https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800');
+    }
+    
+    .feature-card:hover::before {
+        opacity: 0.18;
+        transform: scale(1.1);
+    }
+    
+    .feature-card::after {
         content: '';
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(139, 195, 74, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(139, 195, 74, 0.15), transparent);
         transition: left 0.6s;
-    }
-    
-    .feature-card:hover::before {
-        left: 100%;
-    }
-    
-    .feature-card::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
-        opacity: 0;
-        transition: opacity 0.5s;
+        z-index: 0;
     }
     
     .feature-card:hover::after {
-        opacity: 1;
+        left: 100%;
+    }
+    
+    .feature-card > * {
+        position: relative;
+        z-index: 1;
     }
     
     .feature-card:hover {
@@ -412,6 +652,59 @@
         color: #666;
         font-size: 0.95rem;
         line-height: 1.6;
+    }
+    
+    /* Decorative crop elements on cards */
+    .feature-card .crop-decoration {
+        position: absolute;
+        font-size: 4rem;
+        opacity: 0.05;
+        transition: all 0.5s;
+        pointer-events: none;
+    }
+    
+    .feature-card .crop-decoration.top-right {
+        top: -10px;
+        right: -10px;
+        transform: rotate(15deg);
+    }
+    
+    .feature-card .crop-decoration.bottom-left {
+        bottom: -10px;
+        left: -10px;
+        transform: rotate(-15deg);
+    }
+    
+    .feature-card:hover .crop-decoration {
+        opacity: 0.12;
+        transform: rotate(0deg) scale(1.1);
+    }
+    
+    /* Pulse animation for icons */
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .feature-icon {
+        animation: pulse 3s ease-in-out infinite;
+    }
+    
+    /* Shimmer effect on hover */
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
+    .trust-badge:hover {
+        animation: shimmer 2s infinite;
+        background-image: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 1000px 100%;
     }
     
     /* Product Grid */
@@ -604,7 +897,10 @@
     
     /* Stats Section with Counter Animation */
     .stats-section {
-        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        background: 
+            linear-gradient(135deg, rgba(40, 167, 69, 0.92) 0%, rgba(33, 136, 56, 0.92) 100%),
+            url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600') center/cover;
+        background-attachment: fixed;
         color: white;
         padding: 80px 0;
         position: relative;
@@ -614,13 +910,19 @@
     .stats-section::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-        background-size: 50px 50px;
-        animation: moveBackground 20s linear infinite;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600') center/cover;
+        opacity: 0.15;
+        animation: slowZoomStats 30s ease-in-out infinite alternate;
+        z-index: 0;
+    }
+    
+    @keyframes slowZoomStats {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
     }
     
     @keyframes moveBackground {
@@ -650,45 +952,177 @@
     /* Testimonial Cards */
     .testimonial-card {
         background: white;
-        border-radius: 15px;
-        padding: 25px;
-        text-align: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        transition: all 0.4s;
+        border-radius: 20px;
+        padding: 35px 30px;
+        text-align: left;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         height: 100%;
         position: relative;
         border: 2px solid #f0f0f0;
+        overflow: hidden;
+    }
+    
+    /* Background images for testimonial cards */
+    .testimonial-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+        transition: all 0.6s;
+        z-index: 0;
+        filter: brightness(1.15);
+    }
+    
+    .testimonial-card:nth-child(1)::before {
+        background-image: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800');
+    }
+    
+    .testimonial-card:nth-child(2)::before {
+        background-image: url('https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800');
+    }
+    
+    .testimonial-card:nth-child(3)::before {
+        background-image: url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800');
+    }
+    
+    .testimonial-card:hover::before {
+        opacity: 0.18;
+        transform: scale(1.05);
+    }
+    
+    .testimonial-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #8bc34a, #4caf50);
+        transform: scaleX(0);
+        transition: transform 0.4s;
+    }
+    
+    .testimonial-card:hover::after {
+        transform: scaleX(1);
     }
     
     .testimonial-card p {
-        font-size: 0.95rem;
-        line-height: 1.6;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .testimonial-card strong {
+        color: #2d5016;
+        font-weight: 600;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Quote mark decoration */
+    .testimonial-card .testimonial-stars::before {
+        content: '"';
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        font-size: 6rem;
+        color: rgba(139, 195, 74, 0.08);
+        font-family: Georgia, serif;
+        line-height: 1;
+        z-index: 0;
     }
     
     .testimonial-card::before {
         content: '"';
         position: absolute;
-        top: 20px;
-        left: 30px;
-        font-size: 5rem;
-        color: rgba(40, 167, 69, 0.1);
+        top: 15px;
+        right: 25px;
+        font-size: 6rem;
+        color: rgba(139, 195, 74, 0.08);
         font-family: Georgia, serif;
+        line-height: 1;
     }
     
     .testimonial-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(40, 167, 69, 0.12);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(40, 167, 69, 0.15);
         border-color: #8bc34a;
     }
     
     .testimonial-stars {
         margin-bottom: 20px;
+        display: flex;
+        gap: 3px;
     }
     
     .testimonial-stars i {
-        font-size: 1.3rem;
-        margin: 0 2px;
-        animation: starTwinkle 1.5s ease-in-out infinite;
+        font-size: 1.2rem;
+        animation: starTwinkle 2s ease-in-out infinite;
+    }
+    
+    .testimonial-stars i:nth-child(1) { animation-delay: 0s; }
+    .testimonial-stars i:nth-child(2) { animation-delay: 0.2s; }
+    .testimonial-stars i:nth-child(3) { animation-delay: 0.4s; }
+    .testimonial-stars i:nth-child(4) { animation-delay: 0.6s; }
+    .testimonial-stars i:nth-child(5) { animation-delay: 0.8s; }
+    
+    @keyframes starTwinkle {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.8; }
+    }
+    
+    /* Scroll to Top Button */
+    .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #8bc34a, #4caf50);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        z-index: 1000;
+        box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .scroll-to-top.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .scroll-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(76, 175, 80, 0.6);
+    }
+    
+    /* Smooth animations for scroll */
+    .scroll-animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease-out;
+    }
+    
+    .scroll-animate.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
     
     .testimonial-stars i:nth-child(1) { animation-delay: 0s; }
@@ -714,6 +1148,38 @@
         border: 2px solid #f0f0f0;
     }
     
+    .role-card::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background-size: cover;
+        background-position: center bottom;
+        opacity: 0.12;
+        transition: all 0.6s;
+        z-index: 0;
+        filter: brightness(1.2);
+    }
+    
+    .role-card:nth-child(1)::before {
+        background-image: url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800');
+    }
+    
+    .role-card:nth-child(2)::before {
+        background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800');
+    }
+    
+    .role-card:nth-child(3)::before {
+        background-image: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800');
+    }
+    
+    .role-card:hover::before {
+        opacity: 0.2;
+        transform: scale(1.05);
+    }
+    
     .role-card::after {
         content: '';
         position: absolute;
@@ -721,13 +1187,14 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(33, 136, 56, 0.9));
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(33, 136, 56, 0.05));
         opacity: 0;
         transition: opacity 0.4s;
+        z-index: 0;
     }
     
     .role-card:hover::after {
-        opacity: 0.1;
+        opacity: 1;
     }
     
     .role-card:hover {
@@ -848,34 +1315,55 @@
     }
     
     /* Responsive */
+    @media (max-width: 992px) {
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        .carousel-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .floating-crop {
+            font-size: 2.5rem;
+        }
+    }
+    
     @media (max-width: 768px) {
         .hero-carousel {
-            height: 400px;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 40px;
+            height: 450px;
+            border-radius: 0 0 25px 25px;
+            margin-bottom: 50px;
         }
         
         .carousel-item {
-            height: 400px;
+            height: 450px;
+        }
+        
+        .carousel-content {
+            padding: 0 15px;
         }
         
         .carousel-content h1 {
             font-size: 2rem;
+            margin-bottom: 15px;
         }
         
         .carousel-content p {
-            font-size: 1rem;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
         
         .carousel-badge {
             padding: 6px 12px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin: 3px;
         }
         
         .btn-custom {
-            padding: 12px 25px;
-            font-size: 1rem;
+            padding: 12px 30px;
+            font-size: 0.95rem;
         }
         
         .stat-number {
@@ -883,11 +1371,29 @@
         }
         
         .stat-label {
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .feature-card {
             padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .trust-badge {
+            padding: 20px 15px;
+            margin-bottom: 20px;
+        }
+        
+        .floating-crop {
+            font-size: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem !important;
+        }
+        
+        .row.g-4 {
+            gap: 1rem !important;
         }
         
         .feature-icon {
@@ -1092,7 +1598,15 @@
 </div>
 
 <!-- Features Section -->
-<section class="py-4">
+<section class="py-4 crop-bg-section features-bg">
+    <div class="floating-crops">
+        <div class="floating-crop">🥕</div>
+        <div class="floating-crop">🌽</div>
+        <div class="floating-crop">🍅</div>
+        <div class="floating-crop">🥬</div>
+        <div class="floating-crop">🥔</div>
+        <div class="floating-crop">🫑</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">Why Choose Shaaka?</h2>
@@ -1101,6 +1615,7 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">🌿</span>
                     <i class="bi bi-award feature-icon"></i>
                     <h4>100% Certified Organic</h4>
                     <p>All produce is certified organic, grown without harmful pesticides or chemicals. Safe for your family.</p>
@@ -1108,6 +1623,7 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">🌾</span>
                     <i class="bi bi-people-fill feature-icon"></i>
                     <h4>Direct from Farmers</h4>
                     <p>No middlemen! Connect directly with local farmers and get the freshest produce at fair prices.</p>
@@ -1115,6 +1631,7 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">❤️</span>
                     <i class="bi bi-heart-fill feature-icon"></i>
                     <h4>Supporting Local</h4>
                     <p>Every purchase supports local farmers and homemakers, strengthening our community.</p>
@@ -1122,6 +1639,7 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">🚚</span>
                     <i class="bi bi-truck feature-icon"></i>
                     <h4>Same Day Delivery</h4>
                     <p>Fresh produce delivered within hours of harvest. Maximum freshness guaranteed.</p>
@@ -1129,6 +1647,7 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">✓</span>
                     <i class="bi bi-shield-check feature-icon"></i>
                     <h4>Quality Verified</h4>
                     <p>Every farmer and product is verified by our team. Quality and authenticity guaranteed.</p>
@@ -1136,6 +1655,7 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
+                    <span class="crop-decoration top-right">💰</span>
                     <i class="bi bi-cash-coin feature-icon"></i>
                     <h4>Fair Pricing</h4>
                     <p>No hidden costs. Transparent pricing that's fair to both farmers and customers.</p>
@@ -1146,7 +1666,15 @@
 </section>
 
 <!-- Trust Section -->
-<section class="py-4" style="background: linear-gradient(135deg, #f8fdf9 0%, #e8f5e9 100%);">
+<section class="py-4 crop-bg-section trust-bg" style="background: linear-gradient(135deg, #f8fdf9 0%, #e8f5e9 100%);">
+    <div class="floating-crops">
+        <div class="floating-crop">🌾</div>
+        <div class="floating-crop">🥒</div>
+        <div class="floating-crop">🍆</div>
+        <div class="floating-crop">🌶️</div>
+        <div class="floating-crop">🥦</div>
+        <div class="floating-crop">🧅</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">🌱 Trusted by Thousands</h2>
@@ -1222,7 +1750,15 @@
     </div>
 </section>
 <!-- Testimonials Section -->
-<section class="py-4" style="background: #faf8f3;">
+<section class="py-4 crop-bg-section testimonials-bg" style="background: #faf8f3;">
+    <div class="floating-crops">
+        <div class="floating-crop">🍓</div>
+        <div class="floating-crop">🥕</div>
+        <div class="floating-crop">🌽</div>
+        <div class="floating-crop">🍅</div>
+        <div class="floating-crop">🥬</div>
+        <div class="floating-crop">🫛</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">⭐ What Our Customers Say</h2>
@@ -1273,7 +1809,15 @@
 </section>
 
 <!-- Stats Section -->
-<section class="stats-section" style="padding: 60px 0;">
+<section class="stats-section crop-bg-section" style="padding: 60px 0;">
+    <div class="floating-crops">
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🌱</div>
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🥕</div>
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🌽</div>
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🍅</div>
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🥬</div>
+        <div class="floating-crop" style="color: rgba(255,255,255,0.15);">🌾</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: white; font-weight: 800;">Our Impact</h2>
@@ -1309,7 +1853,15 @@
 </section>
 
 <!-- Join Us Section -->
-<section class="py-4" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);">
+<section class="py-4 crop-bg-section join-bg" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);">
+    <div class="floating-crops">
+        <div class="floating-crop">🌻</div>
+        <div class="floating-crop">🥜</div>
+        <div class="floating-crop">🌾</div>
+        <div class="floating-crop">🍇</div>
+        <div class="floating-crop">🥑</div>
+        <div class="floating-crop">🍋</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">Join Our Community</h2>
@@ -1378,7 +1930,15 @@
 </section>
 
 <!-- How It Works -->
-<section class="py-4" style="background: white;">
+<section class="py-4 crop-bg-section how-it-works-bg" style="background: white;">
+    <div class="floating-crops">
+        <div class="floating-crop">📦</div>
+        <div class="floating-crop">🚚</div>
+        <div class="floating-crop">✅</div>
+        <div class="floating-crop">🛒</div>
+        <div class="floating-crop">🌾</div>
+        <div class="floating-crop">🏠</div>
+    </div>
     <div class="container">
         <div class="text-center mb-4 scroll-animate">
             <h2 class="mb-2" style="color: #2d5016; font-weight: 800;">🚀 How It Works</h2>
@@ -1671,5 +2231,54 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Scroll to Top Button
+const scrollBtn = document.createElement('button');
+scrollBtn.className = 'scroll-to-top';
+scrollBtn.innerHTML = '<i class="bi bi-arrow-up"></i>';
+scrollBtn.setAttribute('aria-label', 'Scroll to top');
+document.body.appendChild(scrollBtn);
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollBtn.classList.add('show');
+    } else {
+        scrollBtn.classList.remove('show');
+    }
+});
+
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Scroll Animation Observer
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.scroll-animate').forEach(el => {
+    observer.observe(el);
+});
+
+// Parallax effect for hero
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const parallaxElements = document.querySelectorAll('.carousel-item');
+    parallaxElements.forEach(el => {
+        el.style.transform = `translateY(${scrolled * 0.5}px)`;
+    });
+});
 </script>
 {% endblock %}
