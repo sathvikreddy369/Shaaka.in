@@ -43,28 +43,105 @@
             color: rgba(255,255,255,0.9) !important;
             transition: all 0.3s;
             margin: 0 5px;
+            padding: 8px 15px !important;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before {
+            left: 0;
         }
         
         .nav-link:hover {
             color: white !important;
             transform: translateY(-2px);
+            background: rgba(255,255,255,0.15);
         }
         
         .nav-link.active {
             color: var(--accent-color) !important;
             font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .nav-link i {
+            margin-right: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .nav-link:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* Ensure cart badge is always visible */
+        .nav-item .nav-link {
+            position: relative;
+            display: inline-block;
         }
         
         .cart-badge {
             position: absolute;
-            top: -5px;
-            right: -10px;
+            top: -8px;
+            right: -12px;
             background: var(--accent-color);
             color: #000;
             border-radius: 50%;
-            padding: 2px 6px;
+            padding: 4px 8px;
             font-size: 0.75rem;
             font-weight: bold;
+            animation: pulse 2s infinite;
+            min-width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Dropdown Menu Styling */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+            margin-bottom: 3px;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(33, 136, 56, 0.1));
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .dropdown-divider {
+            margin: 8px 0;
+            opacity: 0.2;
         }
         
         .btn-primary {
@@ -267,9 +344,10 @@
             left: 0;
             right: 0;
             background: white;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             z-index: 1000;
-            padding: 8px 0;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            border-top: 1px solid #e0e0e0;
         }
         
         .mobile-bottom-nav .nav-item {
@@ -278,36 +356,42 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 10px 8px;
             color: #666;
             text-decoration: none;
             transition: all 0.3s;
             position: relative;
+            border-radius: 12px;
+            margin: 0 4px;
         }
         
         .mobile-bottom-nav .nav-item i {
             font-size: 1.5rem;
             margin-bottom: 4px;
+            transition: all 0.3s;
         }
         
         .mobile-bottom-nav .nav-item span {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .mobile-bottom-nav .nav-item:active {
+            transform: scale(0.95);
         }
         
         .mobile-bottom-nav .nav-item.active {
-            color: #2d5016;
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
         }
         
-        .mobile-bottom-nav .nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 3px;
-            background: #2d5016;
-            border-radius: 0 0 3px 3px;
+        .mobile-bottom-nav .nav-item.active i {
+            transform: scale(1.1);
+        }
+        
+        .mobile-bottom-nav .nav-item.active span {
+            font-weight: 700;
         }
         
         /* Mobile Top Bar */
@@ -318,43 +402,67 @@
             left: 0;
             right: 0;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
             z-index: 1001;
-            padding: 10px 15px;
+            padding: 12px 20px;
+            padding-top: calc(12px + env(safe-area-inset-top));
             align-items: center;
             justify-content: space-between;
         }
         
         .mobile-top-bar .logo {
             color: white;
-            font-weight: bold;
-            font-size: 1.3rem;
+            font-weight: 700;
+            font-size: 1.4rem;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .mobile-top-bar .logo:active {
+            transform: scale(0.95);
         }
         
         .mobile-top-bar .cart-icon {
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             position: relative;
             text-decoration: none;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-top-bar .cart-icon:active {
+            background: rgba(255,255,255,0.2);
+            transform: scale(0.9);
         }
         
         @media (max-width: 768px) {
             .mobile-bottom-nav {
-                display: flex;
+                display: flex !important;
             }
             
             .mobile-top-bar {
-                display: flex;
+                display: flex !important;
             }
             
             body {
-                padding-bottom: 70px;
-                padding-top: 60px;
+                padding-bottom: 80px !important;
+                padding-top: 70px !important;
             }
             
             .navbar {
                 display: none !important;
+            }
+            
+            .content-wrapper {
+                padding-bottom: 30px;
             }
         }
         
@@ -410,17 +518,12 @@
                     {% if session.get('customer_id') %}
                         <!-- Customer Navigation -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('customer_dashboard') }}">
-                                <i class="bi bi-grid"></i> Dashboard
+                            <a class="nav-link {% if request.endpoint == 'customer_dashboard' %}active{% endif %}" href="{{ url_for('customer_dashboard') }}">
+                                <i class="bi bi-grid"></i> Shop
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('cooked_foods') }}">
-                                <i class="bi bi-egg-fried"></i> Cooked Foods
-                            </a>
-                        </li>
-                        <li class="nav-item position-relative">
-                            <a class="nav-link" href="{{ url_for('view_cart') }}">
+                            <a class="nav-link {% if request.endpoint == 'view_cart' %}active{% endif %}" href="{{ url_for('view_cart') }}" style="position: relative;">
                                 <i class="bi bi-cart3"></i> Cart
                                 {% if cart_count and cart_count > 0 %}
                                     <span class="cart-badge">{{ cart_count }}</span>
@@ -428,64 +531,49 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('my_orders') }}">
+                            <a class="nav-link {% if request.endpoint == 'my_orders' %}active{% endif %}" href="{{ url_for('my_orders') }}">
                                 <i class="bi bi-bag-check"></i> Orders
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('customer_profile') }}">
+                            <a class="nav-link {% if request.endpoint == 'customer_profile' %}active{% endif %}" href="{{ url_for('customer_profile') }}">
                                 <i class="bi bi-person-circle"></i> Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('logout') }}">
-                                <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
                         </li>
                     
                     {% elif session.get('employee_id') %}
-                        <!-- Employee Navigation -->
+                        <!-- Homemaker Navigation -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('employee_dashboard') }}">
-                                <i class="bi bi-grid"></i> Dashboard
+                            <a class="nav-link {% if request.endpoint == 'employee_dashboard' %}active{% endif %}" href="{{ url_for('employee_dashboard') }}">
+                                <i class="bi bi-house-heart"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('upload_food') }}">
-                                <i class="bi bi-upload"></i> Upload Food
+                            <a class="nav-link {% if request.endpoint == 'upload_food' %}active{% endif %}" href="{{ url_for('upload_food') }}">
+                                <i class="bi bi-plus-circle"></i> Add Product
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('employee_orders') }}">
-                                <i class="bi bi-list-check"></i> Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('logout') }}">
-                                <i class="bi bi-box-arrow-right"></i> Logout
+                            <a class="nav-link {% if request.endpoint == 'employee_orders' %}active{% endif %}" href="{{ url_for('employee_orders') }}">
+                                <i class="bi bi-cart-check"></i> Orders
                             </a>
                         </li>
                     
                     {% elif current_user.is_authenticated %}
-                        <!-- Farmer Navigation -->
+                        <!-- Vendor Navigation -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('farmer_dashboard') }}">
-                                <i class="bi bi-grid"></i> Dashboard
+                            <a class="nav-link {% if request.endpoint == 'farmer_dashboard' %}active{% endif %}" href="{{ url_for('farmer_dashboard') }}">
+                                <i class="bi bi-shop"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('add_crop') }}">
-                                <i class="bi bi-plus-circle"></i> Add Crop
+                            <a class="nav-link {% if request.endpoint == 'add_crop' %}active{% endif %}" href="{{ url_for('add_crop') }}">
+                                <i class="bi bi-plus-circle"></i> Add Product
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('farmer_analytics') }}">
+                            <a class="nav-link {% if request.endpoint == 'farmer_analytics' %}active{% endif %}" href="{{ url_for('farmer_analytics') }}">
                                 <i class="bi bi-graph-up"></i> Analytics
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('logout') }}">
-                                <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
                         </li>
                     
@@ -640,7 +728,7 @@
                             <li><a href="{{ url_for('customer_dashboard') }}?type=Vegetable"><i class="bi bi-chevron-right"></i> Vegetables</a></li>
                             <li><a href="{{ url_for('customer_dashboard') }}?type=Fruit"><i class="bi bi-chevron-right"></i> Fruits</a></li>
                             <li><a href="{{ url_for('customer_dashboard') }}?type=Food Grains"><i class="bi bi-chevron-right"></i> Food Grains</a></li>
-                            <li><a href="{{ url_for('cooked_foods') }}"><i class="bi bi-chevron-right"></i> Cooked Foods</a></li>
+                            <li><a href="{{ url_for('customer_dashboard') }}?type=Dairy"><i class="bi bi-chevron-right"></i> Dairy Products</a></li>
                         </ul>
                     </div>
                 </div>
@@ -720,6 +808,137 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Enhanced Navbar Interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Active link highlighting
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (currentPath === href || currentPath.startsWith(href + '/'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Mobile bottom nav active state
+            const mobileNavItems = document.querySelectorAll('.mobile-bottom-nav .nav-item');
+            mobileNavItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href && (currentPath === href || currentPath.startsWith(href + '/'))) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#' && document.querySelector(href)) {
+                        e.preventDefault();
+                        document.querySelector(href).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Auto-hide navbar on scroll (mobile)
+            let lastScroll = 0;
+            const mobileTopBar = document.querySelector('.mobile-top-bar');
+            
+            if (mobileTopBar && window.innerWidth <= 768) {
+                window.addEventListener('scroll', () => {
+                    const currentScroll = window.pageYOffset;
+                    
+                    if (currentScroll <= 0) {
+                        mobileTopBar.style.transform = 'translateY(0)';
+                        return;
+                    }
+                    
+                    if (currentScroll > lastScroll && currentScroll > 100) {
+                        // Scrolling down
+                        mobileTopBar.style.transform = 'translateY(-100%)';
+                    } else {
+                        // Scrolling up
+                        mobileTopBar.style.transform = 'translateY(0)';
+                    }
+                    
+                    lastScroll = currentScroll;
+                });
+            }
+            
+            // Dropdown hover effect (desktop only)
+            if (window.innerWidth > 768) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach(dropdown => {
+                    dropdown.addEventListener('mouseenter', function() {
+                        const menu = this.querySelector('.dropdown-menu');
+                        if (menu) {
+                            menu.classList.add('show');
+                        }
+                    });
+                    
+                    dropdown.addEventListener('mouseleave', function() {
+                        const menu = this.querySelector('.dropdown-menu');
+                        if (menu) {
+                            menu.classList.remove('show');
+                        }
+                    });
+                });
+            }
+            
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.btn, .nav-link');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple-effect');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+        });
+        
+        // Add ripple effect styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .ripple-effect {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                pointer-events: none;
+            }
+            
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            .btn, .nav-link {
+                position: relative;
+                overflow: hidden;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

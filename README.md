@@ -13,23 +13,24 @@ A comprehensive web platform connecting organic farmers directly with customers,
 - View order history
 - Manage delivery addresses
 
-### For Farmers
-- List and manage products
+### For Vendors/Sellers
+- List and manage products (vegetables, fruits, grains, dairy)
 - Track sales and earnings
 - View analytics and insights
 - Manage inventory
 - Direct customer communication
 - Fair pricing without middlemen
 
-### For Homemakers (Employees)
-- Upload home-cooked food items
-- Manage food listings
+### For Homemakers
+- Upload homemade food items
+- Manage product listings
 - Track orders and earnings
 - Build customer base
+- Showcase culinary skills
 
 ### For Admins
 - Comprehensive dashboard
-- User management (customers, farmers, employees)
+- User management (customers, vendors, homemakers)
 - Product management
 - Order management
 - Blog and FAQ management
@@ -37,13 +38,15 @@ A comprehensive web platform connecting organic farmers directly with customers,
 - Recipe management
 
 ### Additional Features
-- Blog system for organic farming tips
+- Blog system for healthy living and organic produce tips
 - FAQ section
 - Contact form
 - About Us, Privacy Policy, Terms of Service
 - Responsive design for mobile and desktop
 - Secure authentication
-- Email notifications
+- Product reviews and ratings
+- Mobile bottom navigation
+- Enhanced UI/UX
 
 ## 🛠️ Technology Stack
 
@@ -173,19 +176,19 @@ The application will be available at: `http://localhost:5001`
 - **Access:** Full system control, user management, content management
 
 ### Customer Account
-- **Email:** customer@example.com
+- **Email:** john@example.com (or any from setup)
 - **Password:** password123
-- **Access:** Browse products, place orders, manage profile
+- **Access:** Browse products, place orders, manage profile, write reviews
 
-### Farmer Account
-- **Phone:** 9876543220
+### Vendor Account
+- **Phone:** 9123456780 (Ravi Kumar)
 - **Password:** password123
 - **Access:** Manage products, view sales, analytics
 
 ### Homemaker Account
-- **Email:** homemaker@example.com
+- **Email:** priya@example.com
 - **Password:** password123
-- **Access:** Upload food items, manage listings
+- **Access:** Upload homemade food items, manage listings, track orders
 
 > 📋 **Note:** For complete details about all sample data including additional accounts, products, and test scenarios, see [SAMPLE_DATA_INFO.md](SAMPLE_DATA_INFO.md)
 
@@ -246,19 +249,20 @@ Shaaka_web/
 - `/checkout` - Checkout process
 - `/my_orders` - Order history
 
-### Farmer Routes
-- `/register` - Farmer registration
-- `/login` - Farmer login
-- `/farmer_dashboard` - Farmer dashboard
+### Vendor Routes
+- `/register` - Vendor registration
+- `/login` - Vendor login
+- `/farmer_dashboard` - Vendor dashboard
 - `/add_crop` - Add new product
 - `/farmer_analytics` - Sales analytics
 - `/farmer_orders` - Order management
 
-### Employee Routes
-- `/employee_register` - Employee registration
-- `/employee_login` - Employee login
-- `/employee_dashboard` - Employee dashboard
-- `/upload_food` - Upload food items
+### Homemaker Routes
+- `/employee_register` - Homemaker registration
+- `/employee_login` - Homemaker login
+- `/employee_dashboard` - Homemaker dashboard
+- `/upload_food` - Upload homemade food items
+- `/employee_orders` - Order management
 
 ### Admin Routes
 - `/admin_login` - Admin login
@@ -290,15 +294,18 @@ const GOOGLE_MAPS_API_KEY = 'your-api-key';
 
 ### Main Tables
 - `customers` - Customer accounts
-- `farmers` - Farmer accounts
+- `farmers` - Vendor/Seller accounts
 - `employees` - Homemaker accounts
 - `admin` - Admin accounts
-- `crops` - Product listings
+- `crops` - Product listings (vegetables, fruits, grains, dairy)
+- `cooked_foods` - Homemade food items
 - `orders` - Customer orders
 - `cart` - Shopping cart items
-- `reviews` - Product reviews
+- `crop_reviews` - Product reviews and ratings
+- `customer_addresses` - Delivery addresses
 - `blogs` - Blog posts
 - `faqs` - FAQ entries
+- `recipes` - Recipe collection
 
 ## 🧪 Testing
 
@@ -311,12 +318,19 @@ const GOOGLE_MAPS_API_KEY = 'your-api-key';
 6. View order history
 7. Leave product review
 
-### Test Farmer Flow
-1. Register as farmer
-2. Add products
-3. View dashboard
+### Test Vendor Flow
+1. Register as vendor
+2. Add products (vegetables, fruits, etc.)
+3. View dashboard with stats
 4. Check analytics
 5. Manage orders
+
+### Test Homemaker Flow
+1. Register as homemaker
+2. Upload homemade food items
+3. View dashboard
+4. Track orders
+5. Manage products
 
 ### Test Admin Flow
 1. Login as admin
@@ -387,16 +401,19 @@ The application is fully responsive and works on:
 
 ## 📈 Future Enhancements
 
-- [ ] Real-time chat between customers and farmers
-- [ ] Mobile app (React Native)
-- [ ] Payment gateway integration (Razorpay, Stripe)
-- [ ] SMS notifications
-- [ ] Advanced analytics dashboard
+- [ ] Real-time chat between customers and vendors
+- [ ] Mobile app (React Native/Flutter)
+- [ ] Payment gateway integration (Razorpay, Stripe, PayPal)
+- [ ] SMS notifications for order updates
+- [ ] Advanced analytics dashboard with charts
 - [ ] Inventory management system
-- [ ] Delivery tracking with GPS
-- [ ] Multi-language support
-- [ ] Dark mode
+- [ ] Real-time delivery tracking with GPS
+- [ ] Multi-language support (Hindi, Kannada, Tamil, etc.)
+- [ ] Dark mode theme
 - [ ] Progressive Web App (PWA)
+- [ ] AI-powered product recommendations
+- [ ] Subscription-based orders
+- [ ] Loyalty rewards program
 
 ## 🤝 Contributing
 
@@ -432,7 +449,7 @@ For support and queries:
 
 ---
 
-**Made with ❤️ for farmers and healthy living**
+**Made with ❤️ for local vendors, homemakers, and healthy living**
 
 ## 📸 Screenshots
 

@@ -174,7 +174,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h2 class="mb-2">
-                    <i class="bi bi-person-badge"></i> Welcome, {{ current_user.name }}!
+                    <i class="bi bi-shop"></i> Welcome, {{ current_user.name }}!
                 </h2>
                 <p class="mb-0 opacity-90">
                     <i class="bi bi-geo-alt"></i> {{ current_user.location }} | 
@@ -183,7 +183,7 @@
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <a href="{{ url_for('add_crop') }}" class="btn btn-light btn-lg">
-                    <i class="bi bi-plus-circle"></i> Add New Crop
+                    <i class="bi bi-plus-circle"></i> Add New Product
                 </a>
             </div>
         </div>
@@ -194,10 +194,10 @@
         <div class="col-md-3 col-6">
             <div class="stat-card">
                 <div class="stat-icon success">
-                    <i class="bi bi-basket"></i>
+                    <i class="bi bi-box-seam"></i>
                 </div>
                 <div class="stat-number">{{ crops|length }}</div>
-                <div class="stat-label">Total Products</div>
+                <div class="stat-label">My Products</div>
             </div>
         </div>
         <div class="col-md-3 col-6">
@@ -233,7 +233,8 @@
                     <i class="bi bi-star-fill"></i>
                 </div>
                 <div class="stat-number">
-                    {% set avg_rating = (crops|sum(attribute='average_rating') / crops|length) if crops|length > 0 else 0 %}
+                    {% set rated_crops = crops|selectattr('review_count', 'gt', 0)|list %}
+                    {% set avg_rating = (rated_crops|sum(attribute='average_rating') / rated_crops|length) if rated_crops|length > 0 else 0 %}
                     {{ "%.1f"|format(avg_rating) }}
                 </div>
                 <div class="stat-label">Avg Rating</div>
@@ -280,7 +281,7 @@
     <!-- Products Table -->
     <div class="section-card">
         <h3 class="section-title">
-            <i class="bi bi-basket"></i> Your Products
+            <i class="bi bi-box-seam"></i> My Products
         </h3>
         
         {% if crops %}

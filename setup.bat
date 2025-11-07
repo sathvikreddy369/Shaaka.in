@@ -2,9 +2,12 @@
 REM Shaaka Platform Setup Script for Windows
 REM This script automates the setup process
 
-echo ========================================
+echo ============================================================
 echo    Shaaka Platform Setup for Windows
-echo ========================================
+echo ============================================================
+echo Connecting local vendors and homemakers with customers
+echo Fresh produce and homemade food delivered to your door
+echo ============================================================
 echo.
 
 REM Check if Python is installed
@@ -96,12 +99,14 @@ echo    Sample Data Import
 echo ========================================
 echo.
 echo Sample data includes:
-echo   - Demo user accounts (Admin, Customer, Farmer, Homemaker)
-echo   - 6 sample products (vegetables and fruits)
-echo   - 4 sample food items (home-cooked meals)
-echo   - 6 product reviews
-echo   - 3 blog posts
-echo   - 10 FAQs
+echo   - 8 Customer accounts
+echo   - 5 Vendor accounts (selling fresh produce)
+echo   - 4 Homemaker accounts (selling homemade food)
+echo   - 15 Products (vegetables, fruits, grains)
+echo   - 12 Homemade food items
+echo   - 20+ Product reviews with ratings
+echo   - 8 Recipes
+echo   - 2 Admin accounts
 echo.
 set /p IMPORT_SAMPLE="Do you want to import sample/dummy data for testing? (Y/N): "
 if /i "%IMPORT_SAMPLE%"=="Y" (
@@ -111,11 +116,11 @@ if /i "%IMPORT_SAMPLE%"=="Y" (
     if %errorlevel% equ 0 (
         echo [OK] Sample data imported successfully!
         echo.
-        echo Demo Accounts Created:
-        echo   Admin:     admin@farmermarket.com / password123
-        echo   Customer:  customer@example.com / password123
-        echo   Farmer:    9876543220 / password123
-        echo   Homemaker: homemaker@example.com / password123
+        echo Demo Accounts Created (password: password123):
+        echo   Admin:     admin@shaaka.com
+        echo   Customer:  john@example.com (or jane, bob, alice, mike, etc.)
+        echo   Vendor:    9123456780 (Ravi Kumar - use phone to login)
+        echo   Homemaker: priya@example.com
     ) else (
         echo [WARNING] Sample data import failed. You can import it manually later.
         echo Run: mysql -u root -p farmer_market ^< sample_data.sql
@@ -144,18 +149,19 @@ echo ========================================
 echo    Setup Completed Successfully!
 echo ========================================
 echo.
-echo Default Login Credentials:
-echo    Admin:     admin@farmermarket.com / password123
-echo    Customer:  customer@example.com / password123
-echo    Farmer:    farmer@example.com / password123
-echo    Homemaker: homemaker@example.com / password123
+echo Test Login Credentials (password: password123):
+echo    Admin:     admin@shaaka.com
+echo    Customer:  john@example.com
+echo    Vendor:    9123456780 (use phone number)
+echo    Homemaker: priya@example.com
 echo.
 echo To start the application:
 echo    1. Activate virtual environment: venv\Scripts\activate
 echo    2. Run the application: python app.py
-echo    3. Open browser: http://localhost:5001
+echo    3. Open browser: http://localhost:5000
 echo.
 echo For more information, see README.md
+echo Run 'python setup_dummy_data.py' to see all test accounts
 echo.
 
 REM Ask if user wants to start the application now

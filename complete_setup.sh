@@ -1,28 +1,53 @@
 #!/bin/bash
 
+# Shaaka Complete Setup Script
+# This script sets up the entire database with dummy data
+
 echo "============================================================"
-echo "🚀 Complete Shaaka Setup"
+echo "🚀 Shaaka Complete Setup"
+echo "============================================================"
+echo "Setting up database with test data for development"
 echo "============================================================"
 echo ""
 
-# Step 1: Fix database schema
-echo "Step 1/2: Fixing database schema..."
-echo ""
-./fix_db.sh
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-echo ""
-echo "============================================================"
-echo ""
+# Check if Python is installed
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}❌ Python 3 is not installed${NC}"
+    exit 1
+fi
 
-# Step 2: Fix passwords
-echo "Step 2/2: Fixing passwords..."
-echo ""
-python3 fix_passwords.py
+# Check if MySQL is installed
+if ! command -v mysql &> /dev/null; then
+    echo -e "${RED}❌ MySQL is not installed${NC}"
+    exit 1
+fi
 
+# Run the setup script
+echo "Running database setup with dummy data..."
 echo ""
-echo "============================================================"
-echo "✅ Setup Complete!"
-echo "============================================================"
-echo ""
-echo "🎉 Everything is ready! Run: python3 app.py"
-echo ""
+python3 setup_dummy_data.py
+
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "============================================================"
+    echo -e "${GREEN}✅ Setup Complete!${NC}"
+    echo "============================================================"
+    echo ""
+    echo "🎉 Database is ready with test data!"
+    echo ""
+    echo "🚀 To start the application:"
+    echo "   python3 app.py"
+    echo ""
+    echo "🌐 Then open: http://localhost:5000"
+    echo ""
+else
+    echo ""
+    echo -e "${RED}❌ Setup failed. Please check the error messages above.${NC}"
+    exit 1
+fi

@@ -1,71 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-    
-    <div class="container mt-5">
-     
-        <h2 class="mb-4">My Orders</h2>
+{% extends "base.html" %}
 
-        {% if orders %}
-            {% for order in orders %}
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between">
-                    <div>
-                        <strong>Date:</strong> {{ order['created_at'] }}
+{% block title %}My Orders - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    .orders-header {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+    }
+    
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        overflow: hidden;
+        border: 2px solid #f0f0f0;
+        transition: all 0.3s;
+    }
+    
+    .order-card:hover {
+        border-color: #28a745;
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.2);
+    }
+    
+    .order-header {
+        background: #f8f9fa;
+        padding: 20px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .order-body {
+        padding: 20px;
+    }
+    
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s;
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .order-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .badge-custom {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .badge-placed { background: #fff3cd; color: #856404; }
+    .badge-dispatch { background: #cfe2ff; color: #084298; }
+    .badge-completed { background: #d1e7dd; color: #0f5132; }
+    
+    .btn-back {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        color: white;
+    }
+    
+    .empty-orders {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .empty-orders i {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="orders-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-bag-check"></i> My Orders</h2>
+                <p class="mb-0">Track and manage your orders</p>
+            </div>
+            <button onclick="history.back()" class="btn btn-back">
+                <i class="bi bi-arrow-left"></i> Go Back
+            </button>
+        </div>
+    </div>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="mb-2 mb-md-0">
+                        <i class="bi bi-calendar3"></i> <strong>Order Date:</strong> {{ order['created_at'] }}
                     </div>
-                    <div>
+                    <div class="mb-2 mb-md-0">
                         <strong>Status:</strong> 
                         {% if order['status'] == 'Placed' %}
-                            <span class="badge badge-warning">Placed</span>
+                            <span class="badge-custom badge-placed">
+                                <i class="bi bi-clock"></i> Placed
+                            </span>
                         {% elif order['status'] == 'Ready to Dispatch' %}
-                            <span class="badge badge-primary">Ready to Dispatch</span>
+                            <span class="badge-custom badge-dispatch">
+                                <i class="bi bi-truck"></i> Ready to Dispatch
+                            </span>
                         {% elif order['status'] == 'Completed' %}
-                            <span class="badge badge-success">Completed</span>
+                            <span class="badge-custom badge-completed">
+                                <i class="bi bi-check-circle"></i> Completed
+                            </span>
                         {% endif %}
                     </div>
                     <button class="btn btn-danger btn-sm" 
                             onclick="confirmCancel({{ order['id'] }})">
-                        Cancel Order
+                        <i class="bi bi-x-circle"></i> Cancel Order
                     </button>
                 </div>
+            </div>
 
-                <div class="card-body">
-                    <ul class="list-group">
-                        {% for item in order['items'] %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>{{ item['food_name'] }}</strong><br>
-                                    Price: ₹{{ item['price'] }} x {{ item['quantity'] }}
-                                </div>
-                                <div>
-                                    <strong>₹{{ item['price'] * item['quantity'] }}</strong>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="mt-3 text-right">
-                        <strong>Total:</strong> ₹{{ order['total_cost'] }}
+            <div class="order-body">
+                {% for item in order['items'] %}
+                    <div class="order-item">
+                        <div>
+                            <strong style="color: #2d5016;">{{ item['food_name'] }}</strong><br>
+                            <small class="text-muted">₹{{ item['price'] }} × {{ item['quantity'] }}</small>
+                        </div>
+                        <div>
+                            <strong style="color: #28a745;">₹{{ item['price'] * item['quantity'] }}</strong>
+                        </div>
                     </div>
+                {% endfor %}
+                <div class="mt-3 pt-3 border-top text-end">
+                    <h5 style="color: #2d5016;">
+                        <strong>Total: ₹{{ order['total_cost'] }}</strong>
+                    </h5>
                 </div>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="alert alert-warning">You have no orders yet!</div>
-        {% endif %}
-    </div>
-    <a href="{{url_for('cooked_foods')}}"><button type="submit" class="btn btn-primary btn-block mt-4" >Back to main</button></a>
-    <script>
-        function confirmCancel(orderId) {
-            if (confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
-                window.location.href = "/cancel_order/" + orderId;
-            }
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-orders">
+            <i class="bi bi-bag-x"></i>
+            <h3>No Orders Yet</h3>
+            <p class="text-muted">You haven't placed any orders. Start shopping now!</p>
+            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-success mt-3">
+                <i class="bi bi-shop"></i> Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function confirmCancel(orderId) {
+        if (confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
+            window.location.href = "/cancel_order/" + orderId;
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+{% endblock %}

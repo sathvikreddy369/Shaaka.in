@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    
+    .add-product-header {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        border: 2px solid #f0f0f0;
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 2px solid #e8f5e9;
+    }
+    
+    .form-section:last-child {
+        border-bottom: none;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2d5016;
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2d5016;
+        margin-bottom: 8px;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e8f5e9;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+    }
+    
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 15px;
+        margin-top: 15px;
+        display: none;
+    }
+    
+    .help-text {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 20px;
+        }
+        
+        .add-product-header {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="add-product-header">
+        <h2 class="mb-2">
+            <i class="bi bi-plus-circle"></i> Add New Product
+        </h2>
+        <p class="mb-0 opacity-90">Fill in the details to list your product</p>
+    </div>
+    
+    <div class="form-card">
+        <form action="{{ url_for('add_crop') }}" method="POST" enctype="multipart/form-data">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h4 class="section-title">
+                    <i class="bi bi-info-circle"></i> Basic Information
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="crop_name" class="form-label">Product Name *</label>
+                        <input type="text" class="form-control" id="crop_name" name="crop_name" 
+                               placeholder="e.g., Organic Tomatoes" required>
+                        <div class="help-text">Enter the name of your product</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="crop_type" class="form-label">Product Category *</label>
+                        <select name="crop_type" id="crop_type" class="form-select" required>
+                            <option value="">Select Category</option>
+                            <option value="Vegetable">🥬 Vegetables</option>
+                            <option value="Fruit">🍎 Fruits</option>
+                            <option value="Food Grains">🌾 Food Grains</option>
+                            <option value="Homemade Food">🍲 Homemade Food</option>
+                            <option value="Grocery">🛒 Groceries</option>
+                            <option value="Poultry">🥚 Poultry</option>
+                            <option value="Dairy">🥛 Dairy Products</option>
+                            <option value="Meat">🍖 Meat & Fish</option>
+                        </select>
+                        <div class="help-text">Choose the appropriate category</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" 
+                              placeholder="Describe your product..."></textarea>
+                    <div class="help-text">Provide details about quality, taste, benefits, etc.</div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="place_of_origin" class="form-label">Place of Origin</label>
+                        <input type="text" class="form-control" id="place_of_origin" name="place_of_origin" 
+                               placeholder="e.g., Bangalore">
+                        <div class="help-text">Where is this product from?</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="brand" class="form-label">Brand (if applicable)</label>
+                        <input type="text" class="form-control" id="brand" name="brand" 
+                               placeholder="e.g., Farm Fresh">
+                        <div class="help-text">Leave empty for unbranded products</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing & Stock -->
+            <div class="form-section">
+                <h4 class="section-title">
+                    <i class="bi bi-currency-rupee"></i> Pricing & Stock
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="quantity" class="form-label">Stock Quantity *</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" 
+                               min="0" step="0.01" placeholder="100" required>
+                        <div class="help-text">Available stock</div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="unit" class="form-label">Unit *</label>
+                        <select name="unit" id="unit" class="form-select" required>
+                            <option value="kg">Kilogram (kg)</option>
+                            <option value="liter">Liter</option>
+                            <option value="piece">Piece</option>
+                            <option value="pack">Pack</option>
+                            <option value="jar">Jar</option>
+                            <option value="dozen">Dozen</option>
+                        </select>
+                        <div class="help-text">Unit of measurement</div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="price_per_kg" class="form-label">Price per Unit (₹) *</label>
+                        <input type="number" class="form-control" id="price_per_kg" name="price_per_kg" 
+                               min="0" step="0.01" placeholder="50" required>
+                        <div class="help-text">Selling price</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="mrp" class="form-label">MRP (₹)</label>
+                        <input type="number" class="form-control" id="mrp" name="mrp" 
+                               min="0" step="0.01" placeholder="60">
+                        <div class="help-text">Maximum Retail Price (optional)</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="discount" class="form-label">Discount (%)</label>
+                        <input type="number" class="form-control" id="discount" name="discount" 
+                               min="0" max="100" placeholder="10">
+                        <div class="help-text">Discount percentage (optional)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Details -->
+            <div class="form-section">
+                <h4 class="section-title">
+                    <i class="bi bi-calendar"></i> Additional Details
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="manufacturing_date" class="form-label">Manufacturing Date</label>
+                        <input type="date" class="form-control" id="manufacturing_date" name="manufacturing_date">
+                        <div class="help-text">For packaged products</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="expiry_date" class="form-label">Expiry Date</label>
+                        <input type="date" class="form-control" id="expiry_date" name="expiry_date">
+                        <div class="help-text">For perishable products</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organic_certified" 
+                               name="organic_certified" value="1" checked>
+                        <label class="form-check-label" for="organic_certified">
+                            <strong>Organic Certified</strong>
+                        </label>
+                        <div class="help-text">Check if this product is certified organic</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Offers -->
+            <div class="form-section">
+                <h4 class="section-title">
+                    <i class="bi bi-tag"></i> Special Offers (Optional)
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="offer" class="form-label">Offer Type</label>
+                        <input type="text" class="form-control" id="offer" name="offer" 
+                               placeholder="e.g., Bulk Discount">
+                        <div class="help-text">Type of offer</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="offer_details" class="form-label">Offer Details</label>
+                        <input type="text" class="form-control" id="offer_details" name="offer_details" 
+                               placeholder="e.g., Buy 5kg get 10% off">
+                        <div class="help-text">Describe the offer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Image -->
+            <div class="form-section">
+                <h4 class="section-title">
+                    <i class="bi bi-image"></i> Product Image
+                </h4>
+                
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Image *</label>
+                    <input type="file" class="form-control" id="image" name="image" 
+                           accept="image/*" required onchange="previewImage(event)">
+                    <div class="help-text">Upload a clear image of your product (JPG, PNG)</div>
+                    <img id="imagePreview" class="image-preview" alt="Preview">
+                </div>
+            </div>
+            
+            <!-- Submit Buttons -->
+            <div class="text-center">
+                <button type="submit" class="btn-submit">
+                    <i class="bi bi-check-circle"></i> Add Product
+                </button>
+                <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-secondary ms-3">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewImage(event) {
+    const preview = document.getElementById('imagePreview');
+    const file = event.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+// Auto-calculate discount if MRP and price are provided
+document.getElementById('mrp').addEventListener('input', calculateDiscount);
+document.getElementById('price_per_kg').addEventListener('input', calculateDiscount);
+
+function calculateDiscount() {
+    const mrp = parseFloat(document.getElementById('mrp').value) || 0;
+    const price = parseFloat(document.getElementById('price_per_kg').value) || 0;
+    
+    if (mrp > 0 && price > 0 && mrp > price) {
+        const discount = Math.round(((mrp - price) / mrp) * 100);
+        document.getElementById('discount').value = discount;
+    }
+}
+</script>
+{% endblock %}

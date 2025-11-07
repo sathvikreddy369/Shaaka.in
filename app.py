@@ -904,11 +904,20 @@ def farmer_dashboard():
 def add_crop():
     if request.method == 'POST':
         crop_name = request.form['crop_name']
-        crop_type = request.form['crop_type']  # Fetch crop type from the form
+        crop_type = request.form['crop_type']
         quantity = request.form['quantity']
         price_per_kg = request.form['price_per_kg']
-        offer = request.form['offer']
-        offer_details = request.form['offer_details']
+        unit = request.form.get('unit', 'kg')
+        mrp = request.form.get('mrp')
+        discount = request.form.get('discount')
+        description = request.form.get('description')
+        place_of_origin = request.form.get('place_of_origin')
+        brand = request.form.get('brand')
+        manufacturing_date = request.form.get('manufacturing_date')
+        expiry_date = request.form.get('expiry_date')
+        organic_certified = 1 if request.form.get('organic_certified') else 0
+        offer = request.form.get('offer')
+        offer_details = request.form.get('offer_details')
         image = request.files['image']
         
         # Save the uploaded image
@@ -918,16 +927,20 @@ def add_crop():
         # Insert crop details into the database
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('''INSERT INTO crops (farmer_id, crop_name, crop_type, quantity, price_per_kg, offer, offer_details, image)
-                          VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''', 
-                       (current_user.id, crop_name, crop_type, quantity, price_per_kg, offer, offer_details, filename))
+        cursor.execute('''INSERT INTO crops (farmer_id, crop_name, crop_type, quantity, price_per_kg, unit, mrp, discount,
+                          description, place_of_origin, brand, manufacturing_date, expiry_date, organic_certified,
+                          offer, offer_details, image)
+                          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''', 
+                       (current_user.id, crop_name, crop_type, quantity, price_per_kg, unit, mrp, discount,
+                        description, place_of_origin, brand, manufacturing_date, expiry_date, organic_certified,
+                        offer, offer_details, filename))
         conn.commit()
         conn.close()
 
-        flash('Crop added successfully!', 'success')
+        flash('Product added successfully!', 'success')
         return redirect(url_for('farmer_dashboard'))
 
-    return render_template('add_crop.html')
+    return render_template('add_crop_enhanced.html')
 
 
 # Route to Edit/Delete Crop
@@ -1705,6 +1718,11 @@ def employee_dashboard():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    # Fetch employee name
+    cursor.execute("SELECT name FROM employees WHERE id = %s", (employee_id,))
+    employee_data = cursor.fetchone()
+    employee_name = employee_data['name'] if employee_data else 'Homemaker'
+
     # Fetch uploaded foods by the employee
     cursor.execute("SELECT * FROM cooked_foods WHERE employee_id = %s", (employee_id,))
     uploaded_foods = cursor.fetchall()
@@ -1715,11 +1733,26 @@ def employee_dashboard():
         (employee_id,)
     )
     order_count = cursor.fetchone()['order_count']
+    
+    # Calculate total revenue from completed orders
+    cursor.execute(
+        "SELECT COALESCE(SUM(total_price), 0) AS total_revenue FROM customer_orders WHERE employee_id = %s AND status = 'Completed'", 
+        (employee_id,)
+    )
+    total_revenue = cursor.fetchone()['total_revenue']
+    
+    # Calculate average rating (placeholder - you can implement reviews later)
+    average_rating = 5.0
+
+    conn.close()
 
     return render_template(
-        'employee_dashboard.html',
+        'homemaker_dashboard_enhanced.html',
+        employee_name=employee_name,
         uploaded_foods=uploaded_foods,
-        order_count=order_count
+        order_count=order_count,
+        total_revenue=total_revenue,
+        average_rating=average_rating
     )
 
 
@@ -1786,9 +1819,9 @@ def delete_cooked_food():
 
 @app.route('/cooked_foods', methods=['GET'])
 def cooked_foods():
-    if 'customer_id' not in session:
-        flash("Please log in to view foods.", "danger")
-        return redirect(url_for('login'))
+    # Redirect to customer dashboard - cooked foods feature disabled
+    flash("Browse all products in the shop.", "info")
+    return redirect(url_for('customer_dashboard'))
 
     customer_id = session['customer_id']
     conn = get_db_connection()

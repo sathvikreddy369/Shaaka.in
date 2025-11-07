@@ -1014,7 +1014,7 @@
                             {% elif session.get('employee_id') %}
                             <div class="d-flex gap-3 justify-content-center flex-wrap">
                                 <a href="{{ url_for('employee_dashboard') }}" class="btn btn-light btn-custom btn-lg">
-                                    <i class="bi bi-grid"></i> Employee Dashboard
+                                    <i class="bi bi-house-heart"></i> Homemaker Dashboard
                                 </a>
                                 <a href="{{ url_for('upload_food') }}" class="btn btn-outline-light btn-custom btn-lg">
                                     <i class="bi bi-upload"></i> Upload Food
@@ -1338,17 +1338,17 @@
             <div class="col-md-4">
                 <div class="role-card">
                     <img src="{{ url_for('static', filename='img/farmerlogin.png') }}" 
-                         class="role-image" alt="Farmer">
+                         class="role-image" alt="Vendor">
                     <div class="role-body">
-                        <h4>For Farmers</h4>
-                        <p>Sell your fresh produce directly to customers without middlemen</p>
+                        <h4>For Vendors/Sellers</h4>
+                        <p>Sell your products directly to customers - vegetables, fruits, dairy, groceries & more</p>
                         {% if current_user.is_authenticated %}
                             <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-success w-100">
                                 Go to Dashboard
                             </a>
                         {% else %}
                             <a href="{{ url_for('register') }}" class="btn btn-success w-100">
-                                Register as Farmer
+                                Register as Vendor
                             </a>
                         {% endif %}
                     </div>
@@ -1363,11 +1363,11 @@
                         <p>Share your delicious home-cooked meals and earn income</p>
                         {% if session.get('employee_id') %}
                             <a href="{{ url_for('employee_dashboard') }}" class="btn btn-warning w-100">
-                                Go to Dashboard
+                                <i class="bi bi-house-heart"></i> Go to Dashboard
                             </a>
                         {% else %}
                             <a href="{{ url_for('employee_register') }}" class="btn btn-warning w-100">
-                                Register as Homemaker
+                                <i class="bi bi-person-plus"></i> Register as Homemaker
                             </a>
                         {% endif %}
                     </div>
