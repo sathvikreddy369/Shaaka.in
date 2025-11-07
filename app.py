@@ -777,30 +777,30 @@ def customer_dashboard():
     cursor.execute("SELECT * FROM recipes")
     recipes = cursor.fetchall()
 
-    # Fetch crops based on crop_type with search
+    # Fetch crops based on crop_type with search - including farmer name
     if crop_type == 'All':
         if search_query:
-            cursor.execute('''SELECT crops.*, farmers.location 
+            cursor.execute('''SELECT crops.*, farmers.name as farmer_name, farmers.location as farmer_location 
                               FROM crops 
                               JOIN farmers ON crops.farmer_id = farmers.id 
                               WHERE crops.quantity > 0 
                               AND LOWER(crops.crop_name) LIKE %s''', 
                            (f'%{search_query}%',))
         else:
-            cursor.execute('''SELECT crops.*, farmers.location 
+            cursor.execute('''SELECT crops.*, farmers.name as farmer_name, farmers.location as farmer_location 
                               FROM crops 
                               JOIN farmers ON crops.farmer_id = farmers.id 
                               WHERE crops.quantity > 0''')
     else:
         if search_query:
-            cursor.execute('''SELECT crops.*, farmers.location 
+            cursor.execute('''SELECT crops.*, farmers.name as farmer_name, farmers.location as farmer_location 
                               FROM crops 
                               JOIN farmers ON crops.farmer_id = farmers.id 
                               WHERE crops.quantity > 0 AND crops.crop_type = %s
                               AND LOWER(crops.crop_name) LIKE %s''', 
                            (crop_type, f'%{search_query}%'))
         else:
-            cursor.execute('''SELECT crops.*, farmers.location 
+            cursor.execute('''SELECT crops.*, farmers.name as farmer_name, farmers.location as farmer_location 
                               FROM crops 
                               JOIN farmers ON crops.farmer_id = farmers.id 
                               WHERE crops.quantity > 0 AND crops.crop_type = %s''', 
@@ -824,7 +824,7 @@ def customer_dashboard():
     conn.close()
 
     return render_template(
-        'customer_dashboard_new.html',
+        'customer_dashboard_enhanced.html',
         crops=crops,
         crop_type=crop_type,
         cart_count=cart_count,

@@ -2,227 +2,299 @@
 
 {% block title %}Terms of Service - Shaaka{% endblock %}
 
+{% block extra_css %}
+<style>
+    .terms-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .terms-header {
+        text-align: center;
+        margin-bottom: 50px;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #2196f3, #1565c0);
+        color: white;
+        border-radius: 20px;
+    }
+    
+    .terms-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    
+    .terms-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+    
+    .terms-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .terms-section h2 {
+        color: #1565c0;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #2196f3;
+    }
+    
+    .terms-section h3 {
+        color: #2196f3;
+        font-size: 1.3rem;
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+    
+    .terms-section p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+    
+    .terms-section ul, .terms-section ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .terms-section li {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 10px;
+    }
+    
+    .highlight-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .warning-box {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .last-updated {
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        margin-top: 40px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <h1 class="display-4 mb-4">📜 Terms of Service</h1>
-            <p class="text-muted">Last Updated: November 7, 2025</p>
-
-            <div class="alert alert-info">
-                <strong>Please read these terms carefully before using Shaaka.</strong> By accessing or using our platform, you agree to be bound by these terms.
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">1. Acceptance of Terms</h3>
-                    <p>By creating an account or using Shaaka's services, you agree to:</p>
-                    <ul>
-                        <li>Comply with these Terms of Service</li>
-                        <li>Follow all applicable laws and regulations</li>
-                        <li>Provide accurate and truthful information</li>
-                        <li>Be responsible for your account security</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">2. User Accounts</h3>
-                    <h5>Account Registration</h5>
-                    <ul>
-                        <li>You must be at least 18 years old to create an account</li>
-                        <li>Provide accurate, current, and complete information</li>
-                        <li>Maintain and update your account information</li>
-                        <li>Keep your password secure and confidential</li>
-                    </ul>
-                    <h5 class="mt-3">Account Responsibilities</h5>
-                    <ul>
-                        <li>You are responsible for all activities under your account</li>
-                        <li>Notify us immediately of unauthorized access</li>
-                        <li>Do not share your account with others</li>
-                        <li>We reserve the right to suspend or terminate accounts</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">3. Orders and Payments</h3>
-                    <h5>Placing Orders</h5>
-                    <ul>
-                        <li>All orders are subject to product availability</li>
-                        <li>Prices are subject to change without notice</li>
-                        <li>Minimum order value: ₹200</li>
-                        <li>We reserve the right to refuse or cancel orders</li>
-                    </ul>
-                    <h5 class="mt-3">Payment Terms</h5>
-                    <ul>
-                        <li>Payment must be made at the time of order</li>
-                        <li>We accept credit/debit cards, UPI, net banking, and COD</li>
-                        <li>All prices are in Indian Rupees (INR)</li>
-                        <li>Delivery charges may apply based on location</li>
-                    </ul>
-                    <h5 class="mt-3">Cancellations</h5>
-                    <ul>
-                        <li>Orders can be cancelled before dispatch</li>
-                        <li>Refunds will be processed within 5-7 business days</li>
-                        <li>Once dispatched, orders cannot be cancelled</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">4. Delivery</h3>
-                    <ul>
-                        <li>We deliver within 50km of our partner farms</li>
-                        <li>Delivery times are estimates and not guaranteed</li>
-                        <li>You must be available to receive the delivery</li>
-                        <li>Failed deliveries may incur additional charges</li>
-                        <li>Delivery address must be accurate and complete</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">5. Returns and Refunds</h3>
-                    <h5>Return Policy</h5>
-                    <ul>
-                        <li>Returns accepted within 24 hours of delivery</li>
-                        <li>Products must be in original condition</li>
-                        <li>Quality issues must be reported immediately</li>
-                        <li>Photo evidence may be required for quality claims</li>
-                    </ul>
-                    <h5 class="mt-3">Refund Process</h5>
-                    <ul>
-                        <li>Approved refunds processed within 5-7 business days</li>
-                        <li>Refunds issued to original payment method</li>
-                        <li>Delivery charges are non-refundable (except quality issues)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">6. Product Information</h3>
-                    <ul>
-                        <li>We strive for accurate product descriptions</li>
-                        <li>Colors and images may vary from actual products</li>
-                        <li>Weights are approximate and may vary slightly</li>
-                        <li>All products are certified organic</li>
-                        <li>Seasonal availability may affect product selection</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">7. Farmer Partners</h3>
-                    <p>For farmers joining our platform:</p>
-                    <ul>
-                        <li>Must have valid organic certification</li>
-                        <li>Agree to quality standards and guidelines</li>
-                        <li>Provide accurate product information</li>
-                        <li>Fulfill orders in a timely manner</li>
-                        <li>Maintain product quality and freshness</li>
-                        <li>Commission rates apply as per agreement</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">8. Prohibited Activities</h3>
-                    <p>You agree NOT to:</p>
-                    <ul>
-                        <li>Violate any laws or regulations</li>
-                        <li>Provide false or misleading information</li>
-                        <li>Impersonate others or misrepresent affiliation</li>
-                        <li>Interfere with platform operations</li>
-                        <li>Use automated systems to access the platform</li>
-                        <li>Collect user information without consent</li>
-                        <li>Post harmful, offensive, or inappropriate content</li>
-                        <li>Attempt to hack or compromise security</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">9. Intellectual Property</h3>
-                    <ul>
-                        <li>All content on Shaaka is our property or licensed to us</li>
-                        <li>Shaaka name, logo, and trademarks are protected</li>
-                        <li>You may not use our content without permission</li>
-                        <li>User-generated content remains your property</li>
-                        <li>You grant us license to use your content on our platform</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">10. Limitation of Liability</h3>
-                    <ul>
-                        <li>We are not liable for indirect or consequential damages</li>
-                        <li>Our liability is limited to the order value</li>
-                        <li>We are not responsible for third-party services</li>
-                        <li>Force majeure events are beyond our control</li>
-                        <li>Product quality is the farmer's responsibility</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">11. Dispute Resolution</h3>
-                    <ul>
-                        <li>Contact customer support for issue resolution</li>
-                        <li>We will attempt to resolve disputes amicably</li>
-                        <li>Disputes subject to Bangalore jurisdiction</li>
-                        <li>Arbitration may be required for unresolved disputes</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">12. Changes to Terms</h3>
-                    <p>We reserve the right to modify these terms at any time. Changes will be effective upon posting. Continued use of the platform constitutes acceptance of modified terms.</p>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">13. Termination</h3>
-                    <p>We may terminate or suspend your account:</p>
-                    <ul>
-                        <li>For violation of these terms</li>
-                        <li>For fraudulent or illegal activity</li>
-                        <li>At our discretion with or without notice</li>
-                        <li>You may close your account at any time</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="text-success">14. Contact Information</h3>
-                    <p>For questions about these terms:</p>
-                    <ul>
-                        <li><strong>Email:</strong> legal@shaaka.com</li>
-                        <li><strong>Phone:</strong> +91 1800-123-4567</li>
-                        <li><strong>Address:</strong> 123 Farm Road, Bangalore, Karnataka, India - 560001</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle"></i> <strong>Important:</strong> By using Shaaka, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
-            </div>
+<div class="terms-container">
+    <div class="terms-header">
+        <h1><i class="bi bi-file-text"></i> Terms of Service</h1>
+        <p>Please read these terms carefully before using Shaaka</p>
+    </div>
+    
+    <div class="terms-section">
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing and using Shaaka, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our platform.</p>
+        
+        <div class="highlight-box">
+            <strong><i class="bi bi-info-circle"></i> Note:</strong> These terms apply to all users including customers, farmers, homemakers, and visitors.
         </div>
     </div>
+    
+    <div class="terms-section">
+        <h2>2. Platform Description</h2>
+        <p>Shaaka is an online marketplace that connects:</p>
+        <ul>
+            <li><strong>Customers</strong> seeking fresh, organic produce and homemade food</li>
+            <li><strong>Farmers</strong> selling organic crops directly to consumers</li>
+            <li><strong>Homemakers</strong> offering homemade, healthy food items</li>
+        </ul>
+        <p>We facilitate transactions but are not a party to the actual sale between buyers and sellers.</p>
+    </div>
+    
+    <div class="terms-section">
+        <h2>3. User Accounts</h2>
+        
+        <h3>3.1 Registration</h3>
+        <ul>
+            <li>You must provide accurate and complete information during registration</li>
+            <li>You are responsible for maintaining the confidentiality of your account credentials</li>
+            <li>You must be at least 18 years old to create an account</li>
+            <li>One person may not maintain multiple accounts</li>
+        </ul>
+        
+        <h3>3.2 Account Security</h3>
+        <ul>
+            <li>You are responsible for all activities under your account</li>
+            <li>Notify us immediately of any unauthorized access</li>
+            <li>We reserve the right to suspend or terminate accounts that violate these terms</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>4. For Customers</h2>
+        
+        <h3>4.1 Orders and Payments</h3>
+        <ul>
+            <li>All orders are subject to availability and acceptance by sellers</li>
+            <li>Prices are displayed in Indian Rupees (INR) and include applicable taxes</li>
+            <li>Payment must be made at the time of order placement</li>
+            <li>We use secure payment gateways to process transactions</li>
+        </ul>
+        
+        <h3>4.2 Delivery</h3>
+        <ul>
+            <li>Delivery times are estimates and may vary</li>
+            <li>You must provide accurate delivery information</li>
+            <li>Risk of loss passes to you upon delivery</li>
+        </ul>
+        
+        <h3>4.3 Returns and Refunds</h3>
+        <ul>
+            <li>Due to the perishable nature of products, returns are limited</li>
+            <li>Refunds are provided for damaged or incorrect items</li>
+            <li>Claims must be made within 24 hours of delivery</li>
+            <li>Refunds are processed within 7-10 business days</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>5. For Farmers</h2>
+        
+        <h3>5.1 Product Listings</h3>
+        <ul>
+            <li>All products must be accurately described</li>
+            <li>Products must be certified organic or clearly labeled otherwise</li>
+            <li>You must maintain adequate inventory</li>
+            <li>Pricing must be fair and competitive</li>
+        </ul>
+        
+        <h3>5.2 Quality Standards</h3>
+        <ul>
+            <li>All produce must be fresh and of good quality</li>
+            <li>Products must be free from harmful pesticides and chemicals</li>
+            <li>Proper packaging and handling is required</li>
+            <li>Compliance with food safety regulations is mandatory</li>
+        </ul>
+        
+        <h3>5.3 Payments</h3>
+        <ul>
+            <li>Payments are processed after successful delivery</li>
+            <li>Platform commission: 10% of order value</li>
+            <li>Payments are transferred within 3-5 business days</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>6. For Homemakers</h2>
+        
+        <h3>6.1 Food Safety</h3>
+        <ul>
+            <li>All food items must be prepared in hygienic conditions</li>
+            <li>Compliance with local food safety regulations is required</li>
+            <li>Proper food handling and storage practices must be followed</li>
+            <li>Allergen information must be clearly stated</li>
+        </ul>
+        
+        <h3>6.2 Product Information</h3>
+        <ul>
+            <li>Accurate ingredient lists must be provided</li>
+            <li>Preparation and expiry dates must be clearly mentioned</li>
+            <li>Nutritional information should be included when possible</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>7. Prohibited Activities</h2>
+        
+        <div class="warning-box">
+            <strong><i class="bi bi-exclamation-triangle"></i> Warning:</strong> The following activities are strictly prohibited and may result in account termination.
+        </div>
+        
+        <ul>
+            <li>Selling non-organic products as organic</li>
+            <li>Providing false or misleading information</li>
+            <li>Engaging in fraudulent activities</li>
+            <li>Harassing or abusing other users</li>
+            <li>Violating any applicable laws or regulations</li>
+            <li>Attempting to circumvent platform fees</li>
+            <li>Using the platform for any illegal purpose</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>8. Intellectual Property</h2>
+        <p>All content on Shaaka, including text, graphics, logos, and software, is the property of Shaaka or its licensors and is protected by copyright and other intellectual property laws.</p>
+        <ul>
+            <li>You may not copy, modify, or distribute our content without permission</li>
+            <li>User-generated content remains the property of the user</li>
+            <li>By posting content, you grant us a license to use it on our platform</li>
+        </ul>
+    </div>
+    
+    <div class="terms-section">
+        <h2>9. Limitation of Liability</h2>
+        <p>To the maximum extent permitted by law:</p>
+        <ul>
+            <li>Shaaka is not liable for the quality, safety, or legality of products listed</li>
+            <li>We are not responsible for disputes between buyers and sellers</li>
+            <li>Our total liability is limited to the amount paid for the specific transaction</li>
+            <li>We are not liable for indirect, incidental, or consequential damages</li>
+        </ul>
+        
+        <div class="highlight-box">
+            <strong><i class="bi bi-shield-check"></i> Important:</strong> While we strive to ensure quality, we act as a marketplace facilitator and cannot guarantee the actions of individual sellers.
+        </div>
+    </div>
+    
+    <div class="terms-section">
+        <h2>10. Dispute Resolution</h2>
+        <p>In case of disputes:</p>
+        <ol>
+            <li>Contact our customer support team first</li>
+            <li>We will attempt to mediate between parties</li>
+            <li>If unresolved, disputes will be subject to arbitration in Bangalore, India</li>
+            <li>These terms are governed by Indian law</li>
+        </ol>
+    </div>
+    
+    <div class="terms-section">
+        <h2>11. Modifications to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Continued use of the platform constitutes acceptance of modified terms.</p>
+    </div>
+    
+    <div class="terms-section">
+        <h2>12. Termination</h2>
+        <p>We may terminate or suspend your account at any time for:</p>
+        <ul>
+            <li>Violation of these terms</li>
+            <li>Fraudulent or illegal activity</li>
+            <li>Abuse of the platform or other users</li>
+            <li>Non-payment of fees</li>
+        </ul>
+        <p>Upon termination, your right to use the platform ceases immediately.</p>
+    </div>
+    
+    <div class="terms-section">
+        <h2>13. Contact Information</h2>
+        <p>For questions about these terms, please contact us:</p>
+        <ul>
+            <li><strong>Email:</strong> legal@shaaka.com</li>
+            <li><strong>Phone:</strong> +91 1800-123-4567</li>
+            <li><strong>Address:</strong> 123 Farm Road, Bangalore, Karnataka, India - 560001</li>
+        </ul>
+    </div>
+    
+    <p class="last-updated">Last Updated: November 7, 2025</p>
 </div>
 {% endblock %}

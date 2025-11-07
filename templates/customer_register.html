@@ -3,214 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Login Form</title>
+    <title>Customer Registration - Shaaka</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
         }
-
+        
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(to right, #21d0d6, #8ee7bb);
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 40px 20px;
         }
-
-        .session {
-            display: flex;
-            flex-direction: row;
-            max-width: 900px;
+        
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            height: 100%;
+            z-index: 0;
             overflow: hidden;
         }
-
-        .left {
-    flex: 1;
-    background: url('static/img/loginimg.jpg') no-repeat center center;
-    background-size: cover; /* Ensures the image covers the entire area without distortion */
-    height: 100vh; /* Adjust height to match the viewport */
-    min-height: 300px; /* Optional: Ensures a minimum height for smaller screens */
-}
-
-
-        form {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        form h4 {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        form p {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .floating-label {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .floating-label input {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: 1px solid #1ee7b5;
-            border-radius: 4px;
-            outline: none;
-            transition: border 0.3s;
-        }
-
-        .floating-label input:focus {
-            border-color: #8bf8cb;
-            box-shadow: 0 0 5px rgba(147, 245, 212, 0.938);
-        }
-
-        .floating-label label {
+        
+        .floating-element {
             position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            font-size: 14px;
-            color: #999;
-            pointer-events: none;
+            font-size: 3rem;
+            opacity: 0.15;
+            animation: float 20s infinite;
+        }
+        
+        .floating-element:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { left: 80%; top: 30%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { left: 20%; top: 70%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { left: 70%; top: 60%; animation-delay: 6s; }
+        .floating-element:nth-child(5) { left: 50%; top: 10%; animation-delay: 8s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(90deg); }
+            50% { transform: translateY(-60px) rotate(180deg); }
+            75% { transform: translateY(-30px) rotate(270deg); }
+        }
+        
+        .register-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .register-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .register-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .register-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .register-header h2 {
+            color: #2e7d32;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .register-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-label {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 12px 20px 12px 45px;
+            font-size: 1rem;
             transition: all 0.3s;
         }
-
-        .floating-label input:focus + label,
-        .floating-label input:not(:placeholder-shown) + label {
-            top: 5px;
-            left: 10px;
-            font-size: 12px;
-            color: #078807;
+        
+        .form-control:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            outline: none;
         }
-
-        button {
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 38px;
+            color: #4caf50;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus ~ .input-icon {
+            color: #2e7d32;
+            transform: scale(1.1);
+        }
+        
+        .btn-register {
             width: 100%;
             padding: 15px;
-            background: #054b17;
-            color: #fff;
-            font-size: 16px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
             border: none;
-            border-radius: 4px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
             margin-top: 10px;
-            transition: background 0.3s;
         }
-
-        button:hover {
-            background: #4cee54;
+        
+        .btn-register::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
-
-        a.discrete {
+        
+        .btn-register:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-register span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 15px;
+            color: #999;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-link {
             text-align: center;
             margin-top: 20px;
-            font-size: 14px;
-            color: #0c441a;
+        }
+        
+        .login-link a {
+            color: #4caf50;
             text-decoration: none;
-            transition: color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
         }
-
-        a.discrete:hover {
-            color: #39b175;
+        
+        .login-link a:hover {
+            color: #2e7d32;
+            text-decoration: underline;
         }
-
-        /* Media Queries */
-        @media (max-width: 768px) {
-            .session {
-                flex-direction: column;
+        
+        .back-home {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .back-home a {
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .back-home a:hover {
+            color: #4caf50;
+        }
+        
+        .alert {
+            border-radius: 15px;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
             }
-
-            .left {
-                height: 200px;
-            }
-
-            form {
-                padding: 20px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
-
-        @media (max-width: 480px) {
-            form h4 {
-                font-size: 24px;
+        
+        .form-control.typing {
+            animation: typing 0.3s ease-out;
+        }
+        
+        @keyframes typing {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 576px) {
+            .register-card {
+                padding: 40px 30px;
             }
-
-            form p {
-                font-size: 14px;
+            
+            .register-icon {
+                width: 70px;
+                height: 70px;
             }
-
-            .floating-label input {
-                font-size: 14px;
+            
+            .register-icon i {
+                font-size: 2rem;
             }
         }
     </style>
     <script src="/static/js/location.js"></script>
-
 </head>
 <body>
-    <div class="session">
-        <div class="left"></div>
-        <form action="/customer_register" class="log-in" autocomplete="off" method="POST">
-            <h4>Welcome to <span style="color: #07520a;">SHAAKA</span></h4>
-            <p>Sign Up to be healthy!!</p>
-
-            <div class="floating-label">
-                <input type="text" placeholder=" " id="name" name="name" autocomplete="off" required>
-                <label for="name">Name</label>
-            </div>
-            <div class="floating-label">
-                <input type="text" placeholder=" " id="email" name="email" autocomplete="off" required>
-                <label for="email">Email</label>
-            </div>
-            <div class="floating-label">
-                <input type="tel" placeholder=" " id="phone" name="phone" autocomplete="off" required>
-                <label for="phone">Phone Number</label>
-            </div>
-            <div class="floating-label">
-                <input
-                    type="text"
-                    placeholder=" "
-                    id="location"
-                    name="location"
-                    autocomplete="off"
-                    list="location-suggestions"
-                    required
-                >
-                <label for="location">Locality</label>
-                <datalist id="location-suggestions"></datalist>
-            </div>
-            <div class="floating-label">
-                <input type="text" placeholder=" " id="state" name="state" readonly required>
-                <label for="state">State</label>
-            </div>
-            <div class="floating-label">
-                <input type="text" placeholder=" " id="address" name="address" autocomplete="off" required>
-                <label for="address">Home Address</label>
-            </div>
-            <div class="floating-label">
-                <input type="password" placeholder=" " id="password" name="password" autocomplete="off" required>
-                <label for="password">Password</label>
-            </div>
-            <button type="submit">Sign Up</button>
-            <a href="{{ url_for('customer_login') }}" class="discrete">Already have an account Login</a>
-        </form>
+    <div class="bg-animation">
+        <div class="floating-element">🥬</div>
+        <div class="floating-element">🥕</div>
+        <div class="floating-element">🍅</div>
+        <div class="floating-element">🌽</div>
+        <div class="floating-element">🥦</div>
     </div>
+    
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="register-icon">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <h2>Join Shaaka</h2>
+                <p>Start your journey to healthy organic living</p>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('customer_register') }}">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Enter your full name" required>
+                    <i class="bi bi-person-fill input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    <i class="bi bi-envelope-fill input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone" class="form-control" placeholder="Enter your phone number" required>
+                    <i class="bi bi-telephone-fill input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Locality</label>
+                    <input type="text" name="location" id="location" class="form-control" placeholder="Enter your locality" list="location-suggestions" required>
+                    <i class="bi bi-geo-alt-fill input-icon"></i>
+                    <datalist id="location-suggestions"></datalist>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Home Address</label>
+                    <input type="text" name="address" class="form-control" placeholder="Enter your complete address" required>
+                    <i class="bi bi-house-fill input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Create a strong password" required>
+                    <i class="bi bi-lock-fill input-icon"></i>
+                </div>
+                
+                <button type="submit" class="btn-register">
+                    <span><i class="bi bi-check-circle"></i> Create Account</span>
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <div class="login-link">
+                <p>Already have an account? <a href="{{ url_for('customer_login') }}">Login Here</a></p>
+            </div>
+            
+            <div class="back-home">
+                <a href="{{ url_for('home') }}"><i class="bi bi-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.add('typing');
+                setTimeout(() => {
+                    this.classList.remove('typing');
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>

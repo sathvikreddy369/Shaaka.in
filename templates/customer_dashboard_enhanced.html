@@ -1,0 +1,1067 @@
+{% extends "base.html" %}
+
+{% block title %}Shop Fresh Organic Produce - Shaaka{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Organic Theme Colors */
+    :root {
+        --primary-green: #2d5016;
+        --secondary-green: #4a7c2c;
+        --accent-orange: #ff6b35;
+        --earth-brown: #8b4513;
+        --cream: #faf8f3;
+        --light-green: #e8f5e9;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #faf8f3 0%, #e8f5e9 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* Animated Background Pattern */
+    .dashboard-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.05;
+        background-image: 
+            repeating-linear-gradient(45deg, transparent, transparent 35px, var(--primary-green) 35px, var(--primary-green) 70px),
+            repeating-linear-gradient(-45deg, transparent, transparent 35px, var(--secondary-green) 35px, var(--secondary-green) 70px);
+        animation: movePattern 60s linear infinite;
+    }
+    
+    @keyframes movePattern {
+        0% { background-position: 0 0, 0 0; }
+        100% { background-position: 100px 100px, -100px 100px; }
+    }
+    
+    /* Hero Banner */
+    .hero-banner {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 25px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(45, 80, 22, 0.3);
+    }
+    
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+    
+    .hero-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        animation: float 15s ease-in-out infinite reverse;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(180deg); }
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Filter Section */
+    .filter-section {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+        border: 2px solid var(--light-green);
+        animation: slideDown 0.6s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .filter-section .form-select,
+    .filter-section .form-control {
+        border: 2px solid var(--light-green);
+        border-radius: 12px;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+    
+    .filter-section .form-select:focus,
+    .filter-section .form-control:focus {
+        border-color: var(--secondary-green);
+        box-shadow: 0 0 0 4px rgba(74, 124, 44, 0.1);
+    }
+    
+    /* Product Cards */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    .crop-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        animation: fadeInUp 0.6s ease-out backwards;
+    }
+    
+    .crop-card:nth-child(1) { animation-delay: 0.1s; }
+    .crop-card:nth-child(2) { animation-delay: 0.2s; }
+    .crop-card:nth-child(3) { animation-delay: 0.3s; }
+    .crop-card:nth-child(4) { animation-delay: 0.4s; }
+    .crop-card:nth-child(5) { animation-delay: 0.5s; }
+    .crop-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .crop-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(45, 80, 22, 0.2);
+    }
+    
+    .crop-image-container {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        background: var(--light-green);
+    }
+    
+    .crop-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease, filter 0.3s;
+        cursor: pointer;
+    }
+    
+    .crop-card:hover .crop-image {
+        transform: scale(1.15) rotate(2deg);
+        filter: brightness(1.1);
+    }
+    
+    .crop-image-container::after {
+        content: '👁️ View Details';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(45, 80, 22, 0.95);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        white-space: nowrap;
+    }
+    
+    .crop-card:hover .crop-image-container::after {
+        opacity: 1;
+    }
+    
+    .badge-organic {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .badge-discount {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--accent-orange);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    
+    .crop-card-body {
+        padding: 20px;
+    }
+    
+    .crop-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-green);
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .crop-type {
+        display: inline-block;
+        background: var(--light-green);
+        color: var(--secondary-green);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .farmer-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .farmer-info i {
+        color: var(--secondary-green);
+    }
+    
+    .rating-section {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .rating-stars {
+        color: #ffc107;
+        font-size: 1rem;
+    }
+    
+    .rating-count {
+        color: #999;
+        font-size: 0.85rem;
+    }
+    
+    .price-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    
+    .price-current {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--secondary-green);
+    }
+    
+    .price-old {
+        font-size: 1.2rem;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 8px;
+    }
+    
+    .stock-info {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .stock-low {
+        color: var(--accent-orange);
+        font-weight: 600;
+    }
+    
+    .btn-add-cart {
+        background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-add-cart::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-add-cart:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .btn-add-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(74, 124, 44, 0.4);
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+    
+    .qty-input {
+        border: 2px solid var(--light-green);
+        font-weight: 600;
+    }
+    
+    .qty-input:focus {
+        border-color: var(--secondary-green);
+        box-shadow: none;
+    }
+    
+    .input-group .btn {
+        border: 2px solid var(--light-green);
+        color: var(--secondary-green);
+        transition: all 0.3s;
+    }
+    
+    .input-group .btn:hover {
+        background: var(--secondary-green);
+        color: white;
+        border-color: var(--secondary-green);
+    }
+    
+    /* Loading Animation */
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+    }
+    
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--light-green);
+        border-top: 4px solid var(--secondary-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .empty-state i {
+        font-size: 5rem;
+        color: var(--light-green);
+        margin-bottom: 20px;
+    }
+    
+    /* Scroll to Top Button */
+    .scroll-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(45, 80, 22, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+    
+    .scroll-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .scroll-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(45, 80, 22, 0.4);
+    }
+    
+    /* Review Section Styles */
+    .star-rating-input {
+        font-size: 2rem;
+        cursor: pointer;
+    }
+    
+    .star-rating-input i {
+        color: #ddd;
+        transition: color 0.2s;
+    }
+    
+    .star-rating-input i:hover,
+    .star-rating-input i.active {
+        color: #ffc107;
+    }
+    
+    .review-item {
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    .review-item:last-child {
+        border-bottom: none;
+    }
+    
+    .review-stars {
+        color: #ffc107;
+    }
+    
+    /* Modal Animations */
+    .modal.fade .modal-dialog {
+        transform: scale(0.8);
+        opacity: 0;
+        transition: all 0.3s;
+    }
+    
+    .modal.show .modal-dialog {
+        transform: scale(1);
+        opacity: 1;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .hero-banner {
+            padding: 40px 20px;
+        }
+        
+        .filter-section {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-bg"></div>
+
+<div class="container py-4">
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="hero-content text-center">
+            <h1 class="display-4 fw-bold mb-3">🌾 Fresh Organic Produce</h1>
+            <p class="lead mb-4">Direct from Local Farmers • 100% Organic • Pesticide-Free</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <span class="badge bg-light text-dark px-4 py-2">
+                    <i class="bi bi-patch-check-fill text-success"></i> Certified Organic
+                </span>
+                <span class="badge bg-light text-dark px-4 py-2">
+                    <i class="bi bi-truck text-success"></i> Same Day Delivery
+                </span>
+                <span class="badge bg-light text-dark px-4 py-2">
+                    <i class="bi bi-heart-fill text-danger"></i> Support Local Farmers
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="row align-items-center">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <label class="form-label fw-bold">
+                    <i class="bi bi-funnel"></i> Filter by Type
+                </label>
+                <select class="form-select" onchange="window.location.href='?type=' + this.value">
+                    <option value="All" {% if crop_type == 'All' %}selected{% endif %}>All Products</option>
+                    <option value="Vegetable" {% if crop_type == 'Vegetable' %}selected{% endif %}>🥬 Vegetables</option>
+                    <option value="Fruit" {% if crop_type == 'Fruit' %}selected{% endif %}>🍎 Fruits</option>
+                    <option value="Food Grains" {% if crop_type == 'Food Grains' %}selected{% endif %}>🌾 Food Grains</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <label class="form-label fw-bold">
+                    <i class="bi bi-sort-down"></i> Sort By
+                </label>
+                <select class="form-select" id="sortSelect">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <label class="form-label fw-bold">
+                    <i class="bi bi-search"></i> Search Products
+                </label>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search for vegetables, fruits...">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold d-none d-md-block">&nbsp;</label>
+                <a href="{{ url_for('view_cart') }}" class="btn btn-add-cart">
+                    <i class="bi bi-cart3"></i> View Cart
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Products Grid -->
+    {% if crops %}
+    <div class="product-grid" id="productGrid">
+        {% for crop in crops %}
+        <div class="crop-card" data-type="{{ crop.crop_type }}" data-price="{{ crop.price_per_kg }}" data-rating="{{ crop.average_rating or 0 }}" data-crop-id="{{ crop.id }}">
+            <div class="crop-image-container" onclick="showProductDetails({{ crop.id }})">
+                <img src="{{ url_for('static', filename='uploads/' + crop.image) }}" 
+                     class="crop-image" 
+                     alt="{{ crop.crop_name }}"
+                     onerror="this.src='https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400'"
+                     data-crop-id="{{ crop.id }}"
+                     data-crop-name="{{ crop.crop_name }}"
+                     data-crop-type="{{ crop.crop_type }}"
+                     data-farmer-name="{{ crop.farmer_name }}"
+                     data-farmer-location="{{ crop.farmer_location }}"
+                     data-price="{{ crop.price_per_kg }}"
+                     data-mrp="{{ crop.mrp or crop.price_per_kg }}"
+                     data-discount="{{ crop.discount or 0 }}"
+                     data-quantity="{{ crop.quantity }}"
+                     data-rating="{{ crop.average_rating or 0 }}"
+                     data-description="{{ crop.description or 'Fresh organic produce' }}"
+                     data-origin="{{ crop.place_of_origin or 'Local Farm' }}"
+                     data-delivery="{{ crop.delivery_days or 2 }}">
+                <span class="badge-organic">
+                    <i class="bi bi-patch-check-fill"></i> 100% Organic
+                </span>
+                {% if crop.discount and crop.discount > 0 %}
+                <span class="badge-discount">
+                    {{ crop.discount }}% OFF
+                </span>
+                {% endif %}
+            </div>
+            
+            <div class="crop-card-body">
+                <span class="crop-type">{{ crop.crop_type }}</span>
+                <h5 class="crop-title">{{ crop.crop_name }}</h5>
+                
+                <div class="farmer-info">
+                    <i class="bi bi-person-circle"></i>
+                    <span>{{ crop.farmer_name }}</span>
+                </div>
+                
+                <div class="farmer-info">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span>{{ crop.farmer_location }}</span>
+                </div>
+                
+                {% if crop.average_rating and crop.average_rating > 0 %}
+                <div class="rating-section">
+                    <div class="rating-stars">
+                        {% for i in range(5) %}
+                            {% if i < crop.average_rating|int %}
+                                <i class="bi bi-star-fill"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="rating-count">({{ crop.average_rating|round(1) }})</span>
+                </div>
+                {% endif %}
+                
+                <div class="price-section">
+                    <div>
+                        <span class="price-current">₹{{ crop.price_per_kg }}</span>
+                        {% if crop.mrp and crop.mrp > crop.price_per_kg %}
+                        <span class="price-old">₹{{ crop.mrp }}</span>
+                        {% endif %}
+                        <small class="d-block text-muted">per kg</small>
+                    </div>
+                </div>
+                
+                <div class="stock-info">
+                    {% if crop.quantity < 20 %}
+                    <span class="stock-low">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Only {{ crop.quantity }} kg left!
+                    </span>
+                    {% else %}
+                    <span class="text-success">
+                        <i class="bi bi-check-circle-fill"></i> In Stock ({{ crop.quantity }} kg)
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <form method="POST" action="{{ url_for('add_to_cart', crop_id=crop.id) }}" class="add-to-cart-form">
+                    <div class="input-group mb-3">
+                        <button type="button" class="btn btn-outline-secondary" onclick="decreaseQty(this)">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ crop.quantity }}" 
+                               class="form-control text-center qty-input" style="max-width: 80px;">
+                        <button type="button" class="btn btn-outline-secondary" onclick="increaseQty(this)">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn-add-cart">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-basket"></i>
+        <h3>No Products Available</h3>
+        <p class="text-muted">Check back soon for fresh organic produce!</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Scroll to Top Button -->
+<div class="scroll-top" id="scrollTop">
+    <i class="bi bi-arrow-up"></i>
+</div>
+
+<!-- Product Detail Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 25px; border: none; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%); color: white; border: none;">
+                <h5 class="modal-title" id="modalProductName"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="modalProductImage" src="" alt="" class="img-fluid" style="border-radius: 20px; width: 100%; height: 350px; object-fit: cover;">
+                        <div class="mt-3">
+                            <span class="badge bg-success" id="modalProductType"></span>
+                            <span class="badge bg-warning text-dark" id="modalProductDiscount"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6 class="text-muted">Farmer Information</h6>
+                            <p class="mb-1"><i class="bi bi-person-circle text-success"></i> <strong id="modalFarmerName"></strong></p>
+                            <p class="mb-1"><i class="bi bi-geo-alt-fill text-success"></i> <span id="modalFarmerLocation"></span></p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-muted">Product Details</h6>
+                            <p class="mb-1"><strong>Description:</strong> <span id="modalDescription"></span></p>
+                            <p class="mb-1"><strong>Origin:</strong> <span id="modalOrigin"></span></p>
+                            <p class="mb-1"><strong>Delivery:</strong> <span id="modalDelivery"></span> days</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-muted">Pricing</h6>
+                            <h3 class="text-success mb-0">₹<span id="modalPrice"></span> <small class="text-muted">/kg</small></h3>
+                            <p class="text-muted"><del>₹<span id="modalMRP"></span></del></p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-muted">Availability</h6>
+                            <p id="modalStock"></p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-muted">Rating</h6>
+                            <div id="modalRating"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <!-- Reviews Section -->
+                <div class="reviews-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Customer Reviews</h5>
+                        <button class="btn btn-sm btn-success" onclick="showAddReviewForm()">
+                            <i class="bi bi-star-fill"></i> Add Review
+                        </button>
+                    </div>
+                    
+                    <!-- Add Review Form (Hidden by default) -->
+                    <div id="addReviewForm" style="display: none;" class="mb-4 p-3 bg-light rounded">
+                        <h6>Write Your Review</h6>
+                        <form id="reviewForm">
+                            <input type="hidden" id="reviewCropId">
+                            <div class="mb-3">
+                                <label class="form-label">Your Rating</label>
+                                <div class="star-rating-input">
+                                    <i class="bi bi-star" data-rating="1"></i>
+                                    <i class="bi bi-star" data-rating="2"></i>
+                                    <i class="bi bi-star" data-rating="3"></i>
+                                    <i class="bi bi-star" data-rating="4"></i>
+                                    <i class="bi bi-star" data-rating="5"></i>
+                                </div>
+                                <input type="hidden" id="ratingValue" name="rating" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Your Review</label>
+                                <textarea class="form-control" name="review_text" rows="3" placeholder="Share your experience..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">Submit Review</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddReviewForm()">Cancel</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Reviews List -->
+                    <div id="reviewsList">
+                        <p class="text-muted">Loading reviews...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Quantity selector functions
+function increaseQty(btn) {
+    const input = btn.parentElement.querySelector('.qty-input');
+    const max = parseInt(input.getAttribute('max'));
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+}
+
+function decreaseQty(btn) {
+    const input = btn.parentElement.querySelector('.qty-input');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.crop-card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.crop-title').textContent.toLowerCase();
+        const type = card.querySelector('.crop-type').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || type.includes(searchTerm)) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeInUp 0.4s ease-out';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Sort functionality
+document.getElementById('sortSelect').addEventListener('change', function(e) {
+    const sortBy = e.target.value;
+    const grid = document.getElementById('productGrid');
+    const cards = Array.from(document.querySelectorAll('.crop-card'));
+    
+    cards.sort((a, b) => {
+        switch(sortBy) {
+            case 'price-low':
+                return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+            case 'price-high':
+                return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+            case 'rating':
+                return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            default:
+                return 0;
+        }
+    });
+    
+    cards.forEach(card => grid.appendChild(card));
+});
+
+// Scroll to top
+const scrollTop = document.getElementById('scrollTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollTop.classList.add('visible');
+    } else {
+        scrollTop.classList.remove('visible');
+    }
+});
+
+scrollTop.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Add to cart animation
+document.querySelectorAll('.add-to-cart-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const button = this.querySelector('.btn-add-cart');
+        button.innerHTML = '<i class="bi bi-check-circle-fill"></i> Added!';
+        button.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+        
+        setTimeout(() => {
+            button.innerHTML = '<i class="bi bi-cart-plus"></i> Add to Cart';
+            button.style.background = '';
+        }, 2000);
+    });
+});
+
+// Product Details Modal
+function showProductDetails(cropId) {
+    const img = document.querySelector(`img[data-crop-id="${cropId}"]`);
+    if (!img) return;
+    
+    // Populate modal with product data
+    document.getElementById('modalProductName').textContent = img.dataset.cropName;
+    document.getElementById('modalProductImage').src = img.src;
+    document.getElementById('modalProductType').textContent = img.dataset.cropType;
+    document.getElementById('modalProductDiscount').textContent = img.dataset.discount + '% OFF';
+    document.getElementById('modalFarmerName').textContent = img.dataset.farmerName;
+    document.getElementById('modalFarmerLocation').textContent = img.dataset.farmerLocation;
+    document.getElementById('modalDescription').textContent = img.dataset.description;
+    document.getElementById('modalOrigin').textContent = img.dataset.origin;
+    document.getElementById('modalDelivery').textContent = img.dataset.delivery;
+    document.getElementById('modalPrice').textContent = img.dataset.price;
+    document.getElementById('modalMRP').textContent = img.dataset.mrp;
+    
+    // Stock info
+    const quantity = parseInt(img.dataset.quantity);
+    const stockEl = document.getElementById('modalStock');
+    if (quantity < 20) {
+        stockEl.innerHTML = `<span class="text-warning"><i class="bi bi-exclamation-triangle-fill"></i> Only ${quantity} kg left!</span>`;
+    } else {
+        stockEl.innerHTML = `<span class="text-success"><i class="bi bi-check-circle-fill"></i> In Stock (${quantity} kg)</span>`;
+    }
+    
+    // Rating
+    const rating = parseFloat(img.dataset.rating);
+    let starsHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            starsHTML += '<i class="bi bi-star-fill text-warning"></i> ';
+        } else {
+            starsHTML += '<i class="bi bi-star text-warning"></i> ';
+        }
+    }
+    starsHTML += `<span class="text-muted">(${rating.toFixed(1)})</span>`;
+    document.getElementById('modalRating').innerHTML = starsHTML;
+    
+    // Set crop ID for reviews
+    document.getElementById('reviewCropId').value = cropId;
+    
+    // Load reviews
+    loadReviews(cropId);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('productModal'));
+    modal.show();
+}
+
+// Load Reviews
+function loadReviews(cropId) {
+    const reviewsList = document.getElementById('reviewsList');
+    reviewsList.innerHTML = '<p class="text-muted">Loading reviews...</p>';
+    
+    fetch(`/get_reviews/${cropId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.reviews && data.reviews.length > 0) {
+                let html = '';
+                data.reviews.forEach(review => {
+                    let stars = '';
+                    for (let i = 1; i <= 5; i++) {
+                        stars += i <= review.rating ? '<i class="bi bi-star-fill text-warning"></i> ' : '<i class="bi bi-star text-warning"></i> ';
+                    }
+                    html += `
+                        <div class="review-item">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <strong>${review.customer_name}</strong>
+                                    <div class="review-stars">${stars}</div>
+                                </div>
+                                <small class="text-muted">${new Date(review.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <p class="mb-0">${review.review_text || 'No comment provided'}</p>
+                        </div>
+                    `;
+                });
+                reviewsList.innerHTML = html;
+            } else {
+                reviewsList.innerHTML = '<p class="text-muted">No reviews yet. Be the first to review!</p>';
+            }
+        })
+        .catch(error => {
+            reviewsList.innerHTML = '<p class="text-danger">Error loading reviews</p>';
+        });
+}
+
+// Show/Hide Add Review Form
+function showAddReviewForm() {
+    document.getElementById('addReviewForm').style.display = 'block';
+}
+
+function hideAddReviewForm() {
+    document.getElementById('addReviewForm').style.display = 'none';
+    document.getElementById('reviewForm').reset();
+    document.querySelectorAll('.star-rating-input i').forEach(star => star.classList.remove('active'));
+}
+
+// Star Rating Input
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star-rating-input i');
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.dataset.rating;
+            document.getElementById('ratingValue').value = rating;
+            
+            stars.forEach(s => {
+                if (s.dataset.rating <= rating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+        
+        star.addEventListener('mouseenter', function() {
+            const rating = this.dataset.rating;
+            stars.forEach(s => {
+                if (s.dataset.rating <= rating) {
+                    s.style.color = '#ffc107';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+    });
+    
+    document.querySelector('.star-rating-input').addEventListener('mouseleave', function() {
+        const currentRating = document.getElementById('ratingValue').value;
+        stars.forEach(s => {
+            if (currentRating && s.dataset.rating <= currentRating) {
+                s.style.color = '#ffc107';
+            } else {
+                s.style.color = '#ddd';
+            }
+        });
+    });
+});
+
+// Submit Review
+document.getElementById('reviewForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const cropId = document.getElementById('reviewCropId').value;
+    const rating = document.getElementById('ratingValue').value;
+    const reviewText = this.querySelector('[name="review_text"]').value;
+    
+    if (!rating) {
+        alert('Please select a rating');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('rating', rating);
+    formData.append('review_text', reviewText);
+    
+    fetch(`/add_review/${cropId}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Review submitted successfully!');
+            hideAddReviewForm();
+            loadReviews(cropId);
+        } else {
+            alert(data.message || 'Error submitting review');
+        }
+    })
+    .catch(error => {
+        alert('Error submitting review');
+    });
+});
+</script>
+{% endblock %}

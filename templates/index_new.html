@@ -1,162 +1,721 @@
 {% extends "base.html" %}
 
-{% block title %}Farmer Market - Fresh from Farm to Table{% endblock %}
+{% block title %}Shaaka - Fresh Organic Produce from Farm to Table{% endblock %}
 
 {% block extra_css %}
 <style>
-    .hero-section {
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.9) 0%, rgba(33, 136, 56, 0.9) 100%),
-                    url('{{ url_for("static", filename="img/organic_bg.jpg") }}') center/cover;
-        color: white;
-        padding: 100px 0;
-        text-align: center;
+    /* Organic Theme Background */
+    body {
+        background: linear-gradient(135deg, #faf8f3 0%, #e8f5e9 50%, #fff8e1 100%);
+        position: relative;
+        overflow-x: hidden;
     }
     
-    .hero-section h1 {
-        font-size: 3.5rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .hero-section p {
-        font-size: 1.3rem;
-        margin-bottom: 30px;
-    }
-    
-    .feature-card {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
+    /* Animated Background Pattern */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
         height: 100%;
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(139, 195, 74, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+        animation: backgroundShift 20s ease-in-out infinite;
+        z-index: -1;
+    }
+    
+    @keyframes backgroundShift {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(50px, 30px) scale(1.1); }
+    }
+    
+    /* Floating Leaves Animation */
+    .floating-leaves {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    
+    .leaf {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0.3;
+        animation: floatLeaf 15s infinite;
+    }
+    
+    .leaf:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+    .leaf:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 15s; }
+    .leaf:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 18s; }
+    .leaf:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 14s; }
+    .leaf:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 16s; }
+    .leaf:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 13s; }
+    .leaf:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 17s; }
+    .leaf:nth-child(8) { left: 80%; animation-delay: 4.5s; animation-duration: 19s; }
+    .leaf:nth-child(9) { left: 90%; animation-delay: 1.5s; animation-duration: 11s; }
+    
+    @keyframes floatLeaf {
+        0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.3;
+        }
+        90% {
+            opacity: 0.3;
+        }
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+    
+    /* Hero Carousel Styles */
+    .hero-carousel {
+        position: relative;
+        height: 600px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        border-radius: 0 0 50px 50px;
+    }
+    
+    .carousel-item {
+        height: 600px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .carousel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.85) 0%, rgba(33, 136, 56, 0.85) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .carousel-content {
+        text-align: center;
+        color: white;
+        z-index: 2;
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    .carousel-content h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        animation: slideInDown 0.8s ease-out;
+    }
+    
+    .carousel-content p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        animation: fadeIn 1.2s ease-out;
+    }
+    
+    .carousel-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        padding: 8px 20px;
+        border-radius: 50px;
+        margin: 5px;
+        backdrop-filter: blur(10px);
+        animation: pulse 2s infinite;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Feature Cards with Enhanced Hover */
+    .feature-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+        border-radius: 25px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(139, 195, 74, 0.2), transparent);
+        transition: left 0.6s;
+    }
+    
+    .feature-card:hover::before {
+        left: 100%;
+    }
+    
+    .feature-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+    
+    .feature-card:hover::after {
+        opacity: 1;
     }
     
     .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: translateY(-20px) scale(1.03);
+        box-shadow: 0 20px 50px rgba(76, 175, 80, 0.3);
+        border-color: rgba(139, 195, 74, 0.3);
     }
     
     .feature-icon {
-        font-size: 3rem;
+        font-size: 3.5rem;
         color: #28a745;
         margin-bottom: 20px;
-    }
-    
-    .role-card {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         transition: all 0.3s;
-        height: 100%;
+        animation: float 3s ease-in-out infinite;
     }
     
-    .role-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    .feature-card:hover .feature-icon {
+        transform: scale(1.2) rotate(5deg);
+        color: #218838;
     }
     
-    .role-image {
-        height: 200px;
-        object-fit: cover;
-        width: 100%;
+    .feature-card h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 700;
+        transition: color 0.3s;
     }
     
-    .role-body {
+    .feature-card:hover h4 {
+        color: #28a745;
+    }
+    
+    /* Product Showcase Carousel */
+    .product-showcase {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.4s;
+        margin: 15px;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+    
+    .product-image {
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .product-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #28a745;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        animation: pulse 2s infinite;
+    }
+    
+    .product-info {
         padding: 25px;
     }
     
+    .product-price {
+        font-size: 1.8rem;
+        color: #28a745;
+        font-weight: 700;
+    }
+    
+    .product-old-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 1.2rem;
+        margin-left: 10px;
+    }
+    
+    /* Stats Section with Counter Animation */
     .stats-section {
         background: linear-gradient(135deg, #28a745 0%, #218838 100%);
         color: white;
-        padding: 60px 0;
-        margin: 60px 0;
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: moveBackground 20s linear infinite;
+    }
+    
+    @keyframes moveBackground {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
     }
     
     .stat-item {
         text-align: center;
+        position: relative;
+        z-index: 1;
     }
     
     .stat-number {
-        font-size: 3rem;
-        font-weight: bold;
+        font-size: 3.5rem;
+        font-weight: 800;
         margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     
     .stat-label {
-        font-size: 1.1rem;
-        opacity: 0.9;
+        font-size: 1.2rem;
+        opacity: 0.95;
+        font-weight: 500;
     }
     
+    /* Testimonial Cards */
+    .testimonial-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: all 0.4s;
+        height: 100%;
+        position: relative;
+    }
+    
+    .testimonial-card::before {
+        content: '"';
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        font-size: 5rem;
+        color: rgba(40, 167, 69, 0.1);
+        font-family: Georgia, serif;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(40, 167, 69, 0.15);
+    }
+    
+    .testimonial-stars {
+        margin-bottom: 20px;
+    }
+    
+    .testimonial-stars i {
+        font-size: 1.3rem;
+        margin: 0 2px;
+        animation: starTwinkle 1.5s ease-in-out infinite;
+    }
+    
+    .testimonial-stars i:nth-child(1) { animation-delay: 0s; }
+    .testimonial-stars i:nth-child(2) { animation-delay: 0.1s; }
+    .testimonial-stars i:nth-child(3) { animation-delay: 0.2s; }
+    .testimonial-stars i:nth-child(4) { animation-delay: 0.3s; }
+    .testimonial-stars i:nth-child(5) { animation-delay: 0.4s; }
+    
+    @keyframes starTwinkle {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(0.9); }
+    }
+    
+    /* Role Cards */
+    .role-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.4s;
+        height: 100%;
+        position: relative;
+    }
+    
+    .role-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(33, 136, 56, 0.9));
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+    
+    .role-card:hover::after {
+        opacity: 0.1;
+    }
+    
+    .role-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    
+    .role-image {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.4s;
+    }
+    
+    .role-card:hover .role-image {
+        transform: scale(1.1);
+    }
+    
+    .role-body {
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .role-body .btn {
+        transition: all 0.3s;
+    }
+    
+    .role-body .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* How It Works Section */
+    .how-it-works-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #28a745, #218838);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+        transition: all 0.4s;
+    }
+    
+    .how-it-works-icon:hover {
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 15px 40px rgba(40, 167, 69, 0.4);
+    }
+    
+    .how-it-works-icon i {
+        font-size: 3rem;
+        color: white;
+    }
+    
+    /* Scroll Animations */
+    .scroll-animate {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease-out;
+    }
+    
+    .scroll-animate.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Buttons */
+    .btn-custom {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-custom::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-custom:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    /* Responsive */
     @media (max-width: 768px) {
-        .hero-section h1 {
-            font-size: 2rem;
+        .hero-carousel {
+            height: 500px;
         }
         
-        .hero-section p {
-            font-size: 1rem;
+        .carousel-item {
+            height: 500px;
+        }
+        
+        .carousel-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .carousel-content p {
+            font-size: 1.1rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1>🌾 Fresh from Farm to Your Table</h1>
-        <p class="lead">100% Organic • Direct from Farmers • Pesticide-Free • Farm Fresh in 24 Hours</p>
-        <p>Connect directly with local organic farmers for the freshest, healthiest produce</p>
-        
-        {% if session.get('customer_id') or session.get('employee_id') or current_user.is_authenticated or session.get('admin_id') %}
-            <!-- Logged in user -->
-            <div class="d-flex gap-3 justify-content-center flex-wrap">
-                {% if session.get('customer_id') %}
-                    <a href="{{ url_for('customer_dashboard') }}" class="btn btn-light btn-lg">
-                        <i class="bi bi-grid"></i> Go to Dashboard
-                    </a>
-                    <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-shop"></i> Shop Now
-                    </a>
-                {% elif current_user.is_authenticated %}
-                    <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-light btn-lg">
-                        <i class="bi bi-grid"></i> Farmer Dashboard
-                    </a>
-                    <a href="{{ url_for('farmer_analytics') }}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-graph-up"></i> View Analytics
-                    </a>
-                {% elif session.get('employee_id') %}
-                    <a href="{{ url_for('employee_dashboard') }}" class="btn btn-light btn-lg">
-                        <i class="bi bi-grid"></i> Employee Dashboard
-                    </a>
-                    <a href="{{ url_for('upload_food') }}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-upload"></i> Upload Food
-                    </a>
-                {% elif session.get('admin_id') %}
-                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light btn-lg">
-                        <i class="bi bi-speedometer2"></i> Admin Dashboard
-                    </a>
-                    <a href="{{ url_for('admin_products') }}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-box-seam"></i> Manage Products
-                    </a>
-                {% endif %}
-            </div>
-        {% else %}
-            <!-- Not logged in -->
-            <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a href="{{ url_for('customer_register') }}" class="btn btn-light btn-lg">
-                    <i class="bi bi-person-plus"></i> Get Started Free
-                </a>
-                <a href="{{ url_for('customer_login') }}" class="btn btn-outline-light btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
-                </a>
-            </div>
-        {% endif %}
+<!-- Floating Leaves Background -->
+<div class="floating-leaves">
+    <div class="leaf">🍃</div>
+    <div class="leaf">🌿</div>
+    <div class="leaf">🍂</div>
+    <div class="leaf">🌾</div>
+    <div class="leaf">🍃</div>
+    <div class="leaf">🌿</div>
+    <div class="leaf">🍂</div>
+    <div class="leaf">🌾</div>
+    <div class="leaf">🍃</div>
+</div>
+
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
     </div>
-</section>
+    
+    <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1920');">
+            <div class="carousel-overlay">
+                <div class="container">
+                    <div class="carousel-content">
+                        <h1>🌾 Fresh Organic Produce</h1>
+                        <p class="lead">Direct from Local Farmers to Your Table</p>
+                        <div class="mb-4">
+                            <span class="carousel-badge">🌱 100% Organic</span>
+                            <span class="carousel-badge">🚫 Pesticide-Free</span>
+                            <span class="carousel-badge">⚡ Same Day Delivery</span>
+                        </div>
+                        {% if not (session.get('customer_id') or session.get('employee_id') or current_user.is_authenticated or session.get('admin_id')) %}
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{{ url_for('customer_register') }}" class="btn btn-light btn-custom btn-lg">
+                                <i class="bi bi-person-plus"></i> Get Started Free
+                            </a>
+                            <a href="{{ url_for('customer_login') }}" class="btn btn-outline-light btn-custom btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </div>
+                        {% else %}
+                            {% if session.get('customer_id') %}
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{{ url_for('customer_dashboard') }}" class="btn btn-light btn-custom btn-lg">
+                                    <i class="bi bi-grid"></i> Go to Dashboard
+                                </a>
+                                <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-light btn-custom btn-lg">
+                                    <i class="bi bi-shop"></i> Shop Now
+                                </a>
+                            </div>
+                            {% elif current_user.is_authenticated %}
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-light btn-custom btn-lg">
+                                    <i class="bi bi-grid"></i> Farmer Dashboard
+                                </a>
+                                <a href="{{ url_for('farmer_analytics') }}" class="btn btn-outline-light btn-custom btn-lg">
+                                    <i class="bi bi-graph-up"></i> View Analytics
+                                </a>
+                            </div>
+                            {% elif session.get('employee_id') %}
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{{ url_for('employee_dashboard') }}" class="btn btn-light btn-custom btn-lg">
+                                    <i class="bi bi-grid"></i> Employee Dashboard
+                                </a>
+                                <a href="{{ url_for('upload_food') }}" class="btn btn-outline-light btn-custom btn-lg">
+                                    <i class="bi bi-upload"></i> Upload Food
+                                </a>
+                            </div>
+                            {% elif session.get('admin_id') %}
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light btn-custom btn-lg">
+                                    <i class="bi bi-speedometer2"></i> Admin Dashboard
+                                </a>
+                                <a href="{{ url_for('admin_products') }}" class="btn btn-outline-light btn-custom btn-lg">
+                                    <i class="bi bi-box-seam"></i> Manage Products
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="carousel-item" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1920');">
+            <div class="carousel-overlay">
+                <div class="container">
+                    <div class="carousel-content">
+                        <h1>🥬 Farm Fresh Vegetables</h1>
+                        <p class="lead">Harvested Today, Delivered Today</p>
+                        <div class="mb-4">
+                            <span class="carousel-badge">🌿 Chemical-Free</span>
+                            <span class="carousel-badge">💚 Locally Sourced</span>
+                            <span class="carousel-badge">✨ Premium Quality</span>
+                        </div>
+                        {% if not (session.get('customer_id') or session.get('employee_id') or current_user.is_authenticated or session.get('admin_id')) %}
+                        <a href="{{ url_for('customer_register') }}" class="btn btn-light btn-custom btn-lg">
+                            <i class="bi bi-cart-plus"></i> Start Shopping
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="carousel-item" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1920');">
+            <div class="carousel-overlay">
+                <div class="container">
+                    <div class="carousel-content">
+                        <h1>👨‍🌾 Support Local Farmers</h1>
+                        <p class="lead">Fair Prices • No Middlemen • Direct Connection</p>
+                        <div class="mb-4">
+                            <span class="carousel-badge">🤝 Fair Trade</span>
+                            <span class="carousel-badge">🌍 Sustainable</span>
+                            <span class="carousel-badge">❤️ Community</span>
+                        </div>
+                        {% if not (session.get('customer_id') or session.get('employee_id') or current_user.is_authenticated or session.get('admin_id')) %}
+                        <a href="{{ url_for('about') }}" class="btn btn-light btn-custom btn-lg">
+                            <i class="bi bi-info-circle"></i> Learn More
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 
 <!-- Features Section -->
 <section class="py-5">
@@ -246,14 +805,152 @@
     </div>
 </section>
 
+<!-- Featured Products Carousel -->
+<section class="product-showcase">
+    <div class="container">
+        <h2 class="text-center mb-5 scroll-animate">🛒 Featured Organic Products</h2>
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="product-card scroll-animate">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500');">
+                                    <span class="product-badge">20% OFF</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Tomatoes</h5>
+                                    <p class="text-muted mb-2">Fresh & Juicy</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹40</span>
+                                            <span class="product-old-price">₹50</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 5.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="product-card scroll-animate">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500');">
+                                    <span class="product-badge">FRESH</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Spinach</h5>
+                                    <p class="text-muted mb-2">Nutrient Rich</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹30</span>
+                                            <span class="product-old-price">₹40</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 4.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="product-card scroll-animate">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500');">
+                                    <span class="product-badge">NEW</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Carrots</h5>
+                                    <p class="text-muted mb-2">Crunchy & Sweet</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹45</span>
+                                            <span class="product-old-price">₹55</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 4.9</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="product-card">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500');">
+                                    <span class="product-badge">ORGANIC</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Bananas</h5>
+                                    <p class="text-muted mb-2">Sweet & Fresh</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹35</span>
+                                            <span class="product-old-price">₹45</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 5.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="product-card">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1553279768-865429fa0078?w=500');">
+                                    <span class="product-badge">PREMIUM</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Mangoes</h5>
+                                    <p class="text-muted mb-2">Alphonso Variety</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹80</span>
+                                            <span class="product-old-price">₹100</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 5.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="product-card">
+                                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500');">
+                                    <span class="product-badge">BEST SELLER</span>
+                                </div>
+                                <div class="product-info">
+                                    <h5>Organic Potatoes</h5>
+                                    <p class="text-muted mb-2">Farm Fresh</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="product-price">₹25</span>
+                                            <span class="product-old-price">₹30</span>
+                                        </div>
+                                        <span class="text-warning">⭐ 4.7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('customer_register') }}" class="btn btn-success btn-custom btn-lg">
+                <i class="bi bi-shop"></i> View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- Testimonials Section -->
 <section class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">⭐ What Our Customers Say</h2>
+        <h2 class="text-center mb-5 scroll-animate">⭐ What Our Customers Say</h2>
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="mb-3">
+            <div class="col-md-4 scroll-animate">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -264,9 +961,9 @@
                     <strong>- Priya Sharma, Bangalore</strong>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="mb-3">
+            <div class="col-md-4 scroll-animate">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -277,9 +974,9 @@
                     <strong>- Rajesh Kumar, Mysore</strong>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <div class="mb-3">
+            <div class="col-md-4 scroll-animate">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -377,37 +1074,113 @@
 <!-- How It Works -->
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="text-center mb-5">How It Works</h2>
+        <h2 class="text-center mb-5 scroll-animate">🚀 How It Works</h2>
         <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <i class="bi bi-person-plus-fill" style="font-size: 3rem; color: #28a745;"></i>
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="how-it-works-icon">
+                    <i class="bi bi-person-plus-fill"></i>
                 </div>
-                <h5>1. Register</h5>
-                <p>Create your account in minutes</p>
+                <h5 class="fw-bold">1. Register</h5>
+                <p class="text-muted">Create your account in minutes</p>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <i class="bi bi-search" style="font-size: 3rem; color: #28a745;"></i>
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="how-it-works-icon">
+                    <i class="bi bi-search"></i>
                 </div>
-                <h5>2. Browse</h5>
-                <p>Explore fresh produce and meals</p>
+                <h5 class="fw-bold">2. Browse</h5>
+                <p class="text-muted">Explore fresh organic produce</p>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <i class="bi bi-cart-check-fill" style="font-size: 3rem; color: #28a745;"></i>
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="how-it-works-icon">
+                    <i class="bi bi-cart-check-fill"></i>
                 </div>
-                <h5>3. Order</h5>
-                <p>Add to cart and checkout</p>
+                <h5 class="fw-bold">3. Order</h5>
+                <p class="text-muted">Add to cart and checkout securely</p>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <i class="bi bi-truck" style="font-size: 3rem; color: #28a745;"></i>
+            <div class="col-md-3 text-center scroll-animate">
+                <div class="how-it-works-icon">
+                    <i class="bi bi-truck"></i>
                 </div>
-                <h5>4. Enjoy</h5>
-                <p>Get it delivered fresh</p>
+                <h5 class="fw-bold">4. Enjoy</h5>
+                <p class="text-muted">Fresh delivery within 24 hours</p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%);">
+    <div class="container text-center text-white">
+        <h2 class="mb-4 scroll-animate">Ready to Experience Farm-Fresh Goodness?</h2>
+        <p class="lead mb-4 scroll-animate">Join thousands of happy customers enjoying organic produce daily</p>
+        {% if not (session.get('customer_id') or session.get('employee_id') or current_user.is_authenticated or session.get('admin_id')) %}
+        <div class="scroll-animate">
+            <a href="{{ url_for('customer_register') }}" class="btn btn-light btn-custom btn-lg me-3">
+                <i class="bi bi-person-plus"></i> Sign Up Now
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn btn-outline-light btn-custom btn-lg">
+                <i class="bi bi-envelope"></i> Contact Us
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+// Scroll Animation
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.scroll-animate').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Counter Animation for Stats
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 200;
+    
+    const animateCounter = (counter) => {
+        const target = parseInt(counter.innerText.replace(/\D/g, ''));
+        const increment = target / speed;
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                counter.innerText = Math.ceil(current) + '+';
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.innerText = target + '+';
+            }
+        };
+        
+        updateCounter();
+    };
+    
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                animateCounter(counter);
+                statsObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => {
+        statsObserver.observe(counter);
+    });
+});
+</script>
 {% endblock %}
