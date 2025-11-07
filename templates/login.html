@@ -9,6 +9,16 @@
 <body>
     <div class="container mt-5">
         <h2 class="text-center">Farmer Login</h2>
+        
+        <!-- Demo Credentials -->
+        <div class="alert alert-info text-center">
+            <strong>🔑 Demo Credentials:</strong><br>
+            <small>
+                <strong>Phone:</strong> 9876543220<br>
+                <strong>Password:</strong> password123
+            </small>
+        </div>
+        
         <form action="{{ url_for('login') }}" method="POST">
             <div class="form-group">
                 <label for="phone">Phone Number:</label>
